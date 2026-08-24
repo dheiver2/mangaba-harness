@@ -22,6 +22,19 @@ Mangaba Harness 目前处于 _开发者预览_ 阶段，正在快速迭代。**�
 
 ## 运行
 
+在新机器上，`setup.sh` 会完成全部步骤：依赖、构建、本地 Ollama 模型与 provider 配置。
+
+```sh
+git clone https://github.com/dheiver2/mangaba-harness.git
+cd mangaba-harness
+./setup.sh --run
+```
+
+需要 Node >= 22.19 与 pnpm；未安装 Ollama 时会跳过模型步骤（`--no-model` 可主动跳过）。
+重复执行是安全的：每一步都会先检查，已存在的 `settings.yaml` 会先备份而不是覆盖。
+
+手动执行：
+
 ```sh
 pnpm install
 pnpm run build
@@ -75,7 +88,7 @@ printf 'FROM qwen3:4b\nPARAMETER num_ctx 32768\n' | ollama create qwen3-4b-32k -
 
 Mangaba 的标记、文字标与配色属于 Mangaba；其余部分为上游 DeepSeek Harness，遵循 [MIT](LICENSE)。
 本发行版与 DeepSeek 无关联，也未获其背书。上游品牌素材已被移除而非复用，详见
-[BRAND_GUIDELINES.md](BRAND_GUIDELINES.md)。
+[BRAND_GUIDELINES.zh.md](BRAND_GUIDELINES.zh.md)。
 
 ## 开发
 

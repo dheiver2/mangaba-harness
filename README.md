@@ -21,6 +21,21 @@ Review the [safety notice](SAFETY.md) before running the project.
 
 ## Run
 
+On a fresh machine, `setup.sh` does everything — dependencies, build, the local
+Ollama models, and the provider settings:
+
+```sh
+git clone https://github.com/dheiver2/mangaba-harness.git
+cd mangaba-harness
+./setup.sh --run
+```
+
+It needs Node >= 22.19 and pnpm; it skips the model step when Ollama is absent
+(`--no-model` skips it on purpose). Re-running is safe: each step checks first,
+and an existing `settings.yaml` is backed up rather than overwritten.
+
+By hand:
+
 ```sh
 pnpm install
 pnpm run build
