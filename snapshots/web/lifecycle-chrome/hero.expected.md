@@ -20,7 +20,7 @@
 - button "Settings":
   - img
   - text: Settings
-- text: Into the Unknown Preview
+- text: Mangaba Harness Preview
 - button "Choose workspace":
   - img
   - text: workspace
