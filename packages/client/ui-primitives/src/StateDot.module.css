@@ -2,7 +2,7 @@
  * not this 450) — component-level var pinned to the static scale instead. */
 .dot,
 .matrix {
-  --dsh-state-ongoing: var(--dsw-static-deepseek-450);
+  --dsh-state-ongoing: var(--dsw-static-mangaba-450);
 }
 
 /* Solid states: same-color halo via a 0.10-opacity outer layer (::before)

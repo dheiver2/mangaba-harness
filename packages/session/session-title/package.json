@@ -1,6 +1,6 @@
 {
   "name": "@deepseek-ai/dsh-session-title",
-  "description": "Log-backed session title service and provider registry for the DeepSeek Harness",
+  "description": "Log-backed session title service and provider registry for the Mangaba Harness",
   "version": "0.1.3-alpha.1",
   "publishConfig": {
     "access": "public"

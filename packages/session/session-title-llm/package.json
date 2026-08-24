@@ -1,6 +1,6 @@
 {
   "name": "@deepseek-ai/dsh-session-title-llm",
-  "description": "Shared LLM generation policy for DeepSeek Harness session-title providers",
+  "description": "Shared LLM generation policy for Mangaba Harness session-title providers",
   "version": "0.1.3-alpha.1",
   "publishConfig": {
     "access": "public"

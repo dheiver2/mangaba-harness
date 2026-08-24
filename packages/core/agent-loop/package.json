@@ -1,6 +1,6 @@
 {
   "name": "@deepseek-ai/dsh-agent-loop",
-  "description": "The concrete agent loop plugin for the DeepSeek Harness",
+  "description": "The concrete agent loop plugin for the Mangaba Harness",
   "version": "0.1.3-alpha.1",
   "publishConfig": {
     "access": "public"

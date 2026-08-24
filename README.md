@@ -1,54 +1,82 @@
-# DeepSeek Harness
+<p align="center">
+  <img src="apps/web/public/favicon.svg" alt="Mangaba" width="96" height="96">
+</p>
+
+# Mangaba Harness
 
 English | [中文](README.zh.md)
 
-DeepSeek Harness (`dsh`) is an open-source agent harness developed by [DeepSeek AI](https://deepseek.com).
+Mangaba Harness (`mh`) is an open-source agent harness — a rebranded distribution of
+[DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) (MIT), carrying the
+Mangaba identity and defaults.
 
 It is built on an **everything-is-a-plugin** architecture and powered by [Cordis](https://github.com/cordiverse/cordis), whose design is described in [_A Programming Paradigm for Spatiotemporal Composability_](https://arxiv.org/abs/2608.25512).
 
-Documentation: [https://deepseek-harness.github.io/deepseek-harness/](https://deepseek-harness.github.io/deepseek-harness/)
-
 ## Developer preview
 
-DeepSeek Harness is in _developer preview_ and iterating rapidly. **THERE WILL BE COMPATIBILITY-BREAKING CHANGES.**
+Mangaba Harness is currently in _developer preview_ and is iterating rapidly.
+**THERE WILL BE COMPATIBILITY-BREAKING CHANGES.**
 
 Review the [safety notice](SAFETY.md) before running the project.
 
 ## Run
 
-### Run from `npm`
-
-Install `Node.js`, then run:
-
 ```sh
-npx @deepseek-ai/dsh web
-```
-
-The command starts the Web UI at `http://127.0.0.1:3080` by default and opens it in the default browser for a local launch. An SSH launch only prints the host URL because the SSH client or editor owns the local forwarded address. Pass `--no-open` to run the server without opening a browser. See [Web UI guide](docs/user/guide/index.md).
-
-### Run from source
-
-To run from a repository checkout:
-
-```sh
-git clone https://github.com/deepseek-ai/deepseek-harness.git
-cd deepseek-harness
 pnpm install
 pnpm run build
 pnpm dsh web
 ```
 
-`pnpm run build` prepares the repository artifacts. `pnpm dsh web` uses those built artifacts without rebuilding.
+The command starts the Web UI at `http://127.0.0.1:3080` by default. Pass `--no-open` to run
+the server without opening a browser. See the [Web UI guide](docs/user/guide/index.md).
+
+## Local models
+
+Any OpenAI-compatible endpoint works as a custom provider. For a local Ollama model with tool
+calling, add this to `$DSH_HOME/settings.yaml`:
+
+```yaml
+llm-pi-ai:
+  providers:
+    ollama-local:
+      name: Ollama (local)
+      api: openai-completions
+      baseURL: http://127.0.0.1:11434/v1
+      apiKeyEnv: OLLAMA_API_KEY
+      compat:
+        supportsDeveloperRole: false
+        maxTokensField: max_tokens
+      models:
+        - id: qwen3-4b-32k
+agent-default-model:
+  provider: ollama-local
+  model: qwen3-4b-32k
+```
+
+The harness system prompt is large, so give the model real context — Ollama's 4k default
+truncates it and the model then emits tool calls as plain text instead of calling tools.
+Create a wider variant once:
+
+```sh
+printf 'FROM qwen3:4b\nPARAMETER num_ctx 32768\n' | ollama create qwen3-4b-32k -f -
+```
+
+See the [provider guide](docs/user/guide/providers.md).
 
 ## Community and support
 
-- Submit feedback or bug reports through [GitHub Discussions](https://github.com/deepseek-ai/deepseek-harness/discussions).
-- Add the [`dsh-plugin`](https://github.com/topics/dsh-plugin) topic to your plugin repository for discoverability.
-- Join <a href="https://discord.gg/Ycq5dCaS4">DeepSeek Harness Discord community</a>.
+Submit feedback or bug reports through [GitHub Issues](https://github.com/dheiver2/mangaba-harness/issues).
 
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Branding
+
+The Mangaba mark, wordmark, and palette belong to Mangaba. Everything else is upstream
+DeepSeek Harness under [MIT](LICENSE); this distribution is not affiliated with or endorsed
+by DeepSeek. Upstream brand assets have been removed rather than reused — see
+[BRAND_GUIDELINES.md](BRAND_GUIDELINES.md).
 
 ## Development
 

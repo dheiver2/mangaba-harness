@@ -1,12 +1,24 @@
-# DeepSeek Harness Brand Asset Usage Guidelines
+# Mangaba Harness Brand Notes
 
-English | [中文](BRAND_GUIDELINES.zh.md)
+Mangaba Harness is a rebranded distribution of [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness),
+used under its [MIT license](LICENSE). It is not affiliated with, sponsored by, or endorsed by DeepSeek.
 
-To maintain the long\-term healthy development of the DeepSeek Harness ecosystem, avoid user confusion, and facilitate the retrieval and identification of related resources, we have established these specifications and hope that everyone will adhere to them:
+## Upstream marks
 
-- In your project's descriptive text, you may use "DeepSeek Harness" to truthfully and accurately describe your project's relationship with DeepSeek Harness, for example, "built on DeepSeek Harness" or "compatible with DeepSeek Harness\." Such descriptions comply with license requirements and help users understand your project's positioning\.
-- If you wish your project name to reflect its association with the DeepSeek Harness ecosystem, we recommend using the abbreviated "DSH" designation for naming, which is both clear and facilitates communication within the community\.
-- When naming your project, please avoid using the full "DeepSeek Harness" trademark directly\. "DeepSeek Harness" is a registered trademark of DeepSeek\. Unauthorized use in project names can easily lead to user misunderstanding and confusion, thereby affecting the clarity of the entire ecosystem\. It may also involve trademark infringement\.
-- Additionally, please avoid using official brand materials in your promotions or presentations in a way that could cause misunderstanding, so as not to give users the false impression of official endorsement, cooperation, or authorization\.
+"DeepSeek" and "DeepSeek Harness" are trademarks of DeepSeek, and upstream's own brand
+guidelines ask forks not to carry them in a product name. This distribution therefore ships
+none of upstream's brand artwork: the whale mark, the `deepseek` letterforms, and the official
+wordmark were removed — not recolored — and replaced with Mangaba's own. Upstream is credited in
+prose only, which those guidelines explicitly allow.
 
-We believe that a clear and orderly community environment will make every developer's efforts more visible and more readily recognized\. For the few cases that do not comply with the above specifications, we may contact the relevant parties to make appropriate adjustments in order to maintain the overall order of the ecosystem\. Thank you for your understanding and support—let us work together to build a more friendly and sustainable open\-source community\.
+## Mangaba marks
+
+The mangaba mark, the `mangaba` wordmark, and the Mangaba palette (`#E94A12` on cream) belong to
+Mangaba. They live in:
+
+- `packages/client/ui-primitives/src/MangabaLogo.tsx` — the mark
+- `packages/client/ui-primitives/src/BrandWordmark.tsx` — mark + `mangaba` + `HARNESS` badge
+- `apps/web/public/favicon.svg` — browser/PWA icon
+
+Downstream forks of *this* repository should replace those three files with their own artwork
+rather than shipping Mangaba's.

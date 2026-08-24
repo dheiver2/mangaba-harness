@@ -1,6 +1,6 @@
 {
   "name": "@deepseek-ai/dsh-storage-sqlite",
-  "description": "SQLite storage backend (kv facet) for the DeepSeek Harness storage hub",
+  "description": "SQLite storage backend (kv facet) for the Mangaba Harness storage hub",
   "version": "0.1.3-alpha.1",
   "publishConfig": {
     "access": "public"

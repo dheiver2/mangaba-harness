@@ -1,6 +1,6 @@
 {
   "name": "@deepseek-ai/dsh-storage",
-  "description": "Storage hub (ctx.storage): named backend registry plus mounted data-form facilities for the DeepSeek Harness",
+  "description": "Storage hub (ctx.storage): named backend registry plus mounted data-form facilities for the Mangaba Harness",
   "version": "0.1.3-alpha.1",
   "publishConfig": {
     "access": "public"

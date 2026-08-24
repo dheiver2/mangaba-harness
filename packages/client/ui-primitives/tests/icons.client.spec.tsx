@@ -57,9 +57,9 @@ describe('ic_ds_ icon set', () => {
   })
 })
 
-describe('FishLogo', () => {
+describe('MangabaLogo', () => {
   it('renders the fish path in currentColor at the native ratio', () => {
-    const { container } = render(<primitives.FishLogo />)
+    const { container } = render(<primitives.MangabaLogo />)
     const svg = container.querySelector('svg')!
     expect(svg.getAttribute('width')).toBe('24')
     expect(Number(svg.getAttribute('height'))).toBeCloseTo(17.66, 1)

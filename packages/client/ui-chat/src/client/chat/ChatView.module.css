@@ -96,11 +96,11 @@
   white-space: nowrap;
   background: linear-gradient(
     90deg,
-    var(--dsw-static-deepseek-500) 0%,
-    var(--dsw-static-deepseek-500) 40%,
-    var(--dsw-static-deepseek-200) 50%,
-    var(--dsw-static-deepseek-500) 60%,
-    var(--dsw-static-deepseek-500) 100%
+    var(--dsw-static-mangaba-500) 0%,
+    var(--dsw-static-mangaba-500) 40%,
+    var(--dsw-static-mangaba-200) 50%,
+    var(--dsw-static-mangaba-500) 60%,
+    var(--dsw-static-mangaba-500) 100%
   );
   background-position: 100% 0;
   background-size: 250% 100%;
