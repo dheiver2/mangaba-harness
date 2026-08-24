@@ -31,6 +31,6 @@ describe('DocumentTitle', () => {
     const mounted = render(<DocumentTitle title="First title" productTitle="DSH Local Build" />)
     expect(document.title).toBe('First title — DSH Local Build')
     mounted.unmount()
-    expect(document.title).toBe('DSH Local Build')
+    expect(document.title).toBe('Mangaba Harness')
   })
 })
