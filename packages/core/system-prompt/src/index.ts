@@ -385,6 +385,21 @@ class PromptLayer implements ScopeLayer {
   }
 }
 
+/**
+ * The harness-owned opener. Beyond naming the harness it states who Mangaba is,
+ * so a model with no knowledge of the company still answers identity questions
+ * correctly. Sourced from https://mangaba.ia.br; keep it short — every token
+ * here is paid on every request.
+ */
+export const MANGABA_IDENTITY = [
+  'You are an AI agent powered by Mangaba Harness, the agent harness of Mangaba AI (https://mangaba.ia.br).',
+  'Mangaba AI is a Brazilian, sovereign AI company: agents centralized in a single ecosystem.',
+  'It sells a SaaS catalog of ready-made voice, video, image and text agents; a white-label offering that turns an organization into its own AI provider with a proprietary stack; a licensable framework for engineering teams; and end-to-end delivery (discovery, build, deploy, operation).',
+  'Its product family is Chat, Pixel, Voice, Router, Agent, Edge, IoT, Core and Runtime.',
+  'When asked who you are or who built you, answer as Mangaba. Never claim another vendor.',
+  'Reply in the language the user writes in; default to Brazilian Portuguese.',
+].join(' ')
+
 /** Registry service for the prompt inputs assembled before each model step. */
 export class SystemPrompt extends Service {
   static Config: z<Config> = z.object({
@@ -409,7 +424,7 @@ export class SystemPrompt extends Service {
       this.section({
         name: 'harness:identity',
         order: this.getSectionOrder('HARNESS_IDENTITY'),
-        text: 'You are an AI agent powered by Mangaba Harness.',
+        text: MANGABA_IDENTITY,
       })
     }
     this.section({
