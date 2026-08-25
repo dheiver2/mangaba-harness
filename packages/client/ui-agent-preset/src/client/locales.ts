@@ -27,11 +27,11 @@ export const en: Record<AgentPresetSettingsKey, string> = {
   nav: 'Agent presets',
   sectionIntro:
     'A preset is the plugin composition one session\'s agent runs — its tools, prompt, and capabilities. '
-    + 'Duplicate an existing one and make it yours, or let the agent draft one for you in Creator mode.',
+    + 'Duplicate an existing one and make it yours, or let the agent draft one for you in Creator.',
   builtIn: 'Built-in',
   setDefault: 'Set as default',
   view: 'View',
-  presetStandardName: 'Standard mode',
+  presetStandardName: 'Standard',
   presetStandardDescription:
     'Full coding agent with file editing, shell, file and web search, skills, planning, goals, subagents, and workflows.',
   presetPtcName: 'PTC mode',
@@ -40,9 +40,9 @@ export const en: Record<AgentPresetSettingsKey, string> = {
   presetMinimalName: 'Minimal mode',
   presetMinimalDescription:
     'Two-tool coding agent with persistent bash and str_replace_editor.',
-  presetCordisName: 'Creator mode',
+  presetCordisName: 'Creator',
   presetCordisDescription:
-    'Built for creating custom agent presets, with all Standard mode capabilities plus runtime inspection, plugin experiments, and preset-authoring guidance.',
+    'Built for creating custom agent presets: everything Standard does, plus runtime inspection, plugin experiments, and preset-authoring guidance.',
   duplicate: 'Duplicate',
   duplicateUnavailable: 'This deployment has no writable preset directory',
   delete: 'Delete',
@@ -93,13 +93,13 @@ export const zh: Record<AgentPresetSettingsKey, string> = {
   builtIn: '内置',
   setDefault: '设为默认',
   view: '查看',
-  presetStandardName: '标准模式',
+  presetStandardName: '标准',
   presetStandardDescription: '功能完整的编码 Agent，支持文件编辑、Shell、文件与网页检索、Skills、计划、目标、子代理和工作流。',
   presetPtcName: 'PTC 模式',
   presetPtcDescription: '功能完整的编码 Agent，但默认不提供 workflow 工具；其他工具通过 PTC 模式 SDK 呈现，让模型用一个 TypeScript 程序组合多步操作。',
   presetMinimalName: '极简模式',
   presetMinimalDescription: '仅提供持久 bash 与 str_replace_editor 的双工具编码 Agent。',
-  presetCordisName: '创造模式',
+  presetCordisName: '创造',
   presetCordisDescription: '用于创建自定义 Agent preset：具备标准模式的全部能力，并提供运行时检查、插件实验和 preset 创作指导。',
   duplicate: '复制',
   duplicateUnavailable: '此部署未配置可写的预设目录',
