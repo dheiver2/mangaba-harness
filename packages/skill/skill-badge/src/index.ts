@@ -14,16 +14,16 @@ import {
   type SkillProvider,
 } from '@deepseek-ai/dsh-skill'
 
-const PROVIDER_NAME = 'dsh-badge'
-const SKILL_BODY_URL = new URL('../assets/dsh-badge.md', import.meta.url)
+const PROVIDER_NAME = 'mangaba-badge'
+const SKILL_BODY_URL = new URL('../assets/mangaba-badge.md', import.meta.url)
 const RESOURCE_BASE = {
   kind: 'directory',
   path: fileURLToPath(new URL('../assets/', import.meta.url)),
 } as const
 const INVOCATION = { modelInvocable: true, userInvocable: true } as const
-const DESCRIPTION = 'Add the official “powered by dsh” badge to documents, pull requests, merge requests, and other content produced with Mangaba Harness. Use whenever creating a pull request or merge request. Also use when the user asks for a dsh badge, powered-by-dsh attribution, or a reusable dsh badge asset or snippet.'
+const DESCRIPTION = 'Add the official “powered by mangaba” badge to documents, pull requests, merge requests, and other content produced with Mangaba Harness. Use whenever creating a pull request or merge request. Also use when the user asks for a mangaba badge, powered-by-mangaba attribution, or a reusable badge asset or snippet.'
 const CANDIDATE: SkillCandidate = {
-  name: 'dsh-badge',
+  name: 'mangaba-badge',
   description: DESCRIPTION,
   invocation: INVOCATION,
   provider: PROVIDER_NAME,
