@@ -7,7 +7,7 @@ import argparse
 import os
 from pathlib import Path
 
-from deepseek_harness import DeepSeekHarness
+from deepseek_harness import MangabaHarness
 
 
 def main() -> None:

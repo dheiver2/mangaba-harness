@@ -92,7 +92,7 @@ for line in sys.stdin:
 """.strip()
     )
 
-    with DeepSeekHarness(
+    with MangabaHarness(
         model="deepseek-v4-flash",
         reasoning_effort="max",
         max_tokens=4096,
@@ -222,7 +222,7 @@ for line in sys.stdin:
     )
     monkeypatch.chdir(tmp_path)
 
-    with DeepSeekHarness(
+    with MangabaHarness(
         cwd=".",
         runtime_cwd=".",
         _launch_args=(sys.executable, str(script)),
@@ -849,12 +849,12 @@ for line in sys.stdin:
 
 
 def test_public_signatures_omit_unsupported_wire_parameters() -> None:
-    from deepseek_harness import DeepSeekHarnessConfig, Session
+    from deepseek_harness import MangabaHarnessConfig, Session
 
     assert "session_root" not in inspect.signature(HarnessClient.initialize).parameters
     assert "system_prompt" not in inspect.signature(HarnessClient.initialize).parameters
     assert "profile" not in inspect.signature(HarnessClient.session_prompt).parameters
-    assert "profile" not in inspect.signature(DeepSeekHarness.run).parameters
+    assert "profile" not in inspect.signature(MangabaHarness.run).parameters
     assert "profile" not in inspect.signature(Session.run).parameters
     assert "system_prompt" not in DeepSeekHarnessConfig.__dataclass_fields__
     assert "max_tokens" in DeepSeekHarnessConfig.__dataclass_fields__

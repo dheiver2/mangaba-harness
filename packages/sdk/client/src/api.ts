@@ -1,5 +1,5 @@
 /**
- * High-level run API over {@link HarnessClient}: `DeepSeekHarness` owns one
+ * High-level run API over {@link HarnessClient}: `MangabaHarness` owns one
  * runtime subprocess across many sessions; `HarnessSession.run` sends a
  * prompt and settles when the whole agent next becomes idle.
  *
@@ -14,12 +14,12 @@ import type { RuntimeProcessOptions } from './launch.ts'
 import type { ContentBlock, DeepSeekHarnessOptions, HarnessNotification, RunResult, SdkPromptContentBlock } from './types.ts'
 
 /**
- * Reusable SDK for running DeepSeek Harness agent turns in a runtime
+ * Reusable SDK for running Mangaba Harness agent turns in a runtime
  * subprocess. The subprocess starts lazily on first use and stays owned by
  * this instance until {@link close}; always close (or `await using`) so the
  * child is reaped.
  */
-export class DeepSeekHarness implements AsyncDisposable {
+export class MangabaHarness implements AsyncDisposable {
   private clientInstance: HarnessClient
   private readonly createClient: () => HarnessClient
   private readonly cwd: string
@@ -84,7 +84,7 @@ export class DeepSeekHarness implements AsyncDisposable {
         } catch (cleanupError: unknown) {
           throw new AggregateError(
             [error, cleanupError],
-            'DeepSeek Harness initialization and cleanup failed',
+            'Mangaba Harness initialization and cleanup failed',
           )
         }
         if (!this.closed) this.clientInstance = this.createClient()
@@ -164,7 +164,7 @@ export class HarnessSession {
    * @param harness - the owning harness (supplies the client and handshake).
    * @param id - the wire session id this handle runs on.
    */
-  constructor(readonly harness: DeepSeekHarness, readonly id: string) {}
+  constructor(readonly harness: MangabaHarness, readonly id: string) {}
 
   /**
    * Queue one prompt, then observe the whole session through its next idle.

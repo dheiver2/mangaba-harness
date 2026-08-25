@@ -1,5 +1,7 @@
 # Mangaba Harness Brand Notes
 
+English | [中文](BRAND_GUIDELINES.zh.md)
+
 Mangaba Harness is a rebranded distribution of [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness),
 used under its [MIT license](LICENSE). It is not affiliated with, sponsored by, or endorsed by DeepSeek.
 

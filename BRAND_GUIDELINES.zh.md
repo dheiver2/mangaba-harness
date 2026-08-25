@@ -1,5 +1,7 @@
 # Mangaba Harness 品牌说明
 
+[English](BRAND_GUIDELINES.md) | 中文
+
 Mangaba Harness 是 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 的品牌重塑发行版，
 依据其 [MIT 许可证](LICENSE) 使用。本项目与 DeepSeek 无关联、未获其赞助或背书。
 

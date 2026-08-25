@@ -12,7 +12,7 @@ import { fileURLToPath } from 'node:url'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { ReasoningEffortId } from '@deepseek-ai/dsh-llm'
 import {
-  DeepSeekHarness,
+  MangabaHarness,
   HarnessClient,
   HarnessSession,
   JsonRpcResponseError,
@@ -62,7 +62,7 @@ async function tempDir(prefix: string): Promise<string> {
   return dir
 }
 
-describe('DeepSeekHarness', () => {
+describe('MangabaHarness', () => {
   it('ignores notifications that precede the submitted message receipt', async () => {
     const notifications = [
       { method: 'session.status', params: { sessionId: 'owned', status: 'running' } },
@@ -111,7 +111,7 @@ describe('DeepSeekHarness', () => {
           async * [Symbol.asyncIterator]() {},
         }),
       },
-    } as unknown as DeepSeekHarness
+    } as unknown as MangabaHarness
 
     const result = await new HarnessSession(harness, 'owned').run('go')
 
@@ -241,7 +241,7 @@ describe('DeepSeekHarness', () => {
       const failure = await harness.start().catch((error: unknown) => error)
       expect(failure).toBeInstanceOf(AggregateError)
       expect((failure as AggregateError).errors).toEqual([initializeError, cleanupError])
-      expect((failure as Error).message).toBe('DeepSeek Harness initialization and cleanup failed')
+      expect((failure as Error).message).toBe('Mangaba Harness initialization and cleanup failed')
       expect(harness.client).toBe(failedClient)
     } finally {
       start.mockRestore()
@@ -293,7 +293,7 @@ describe('DeepSeekHarness', () => {
   })
 
   it('supports await using disposal', async () => {
-    let captured: DeepSeekHarness
+    let captured: MangabaHarness
     {
       await using harness = createProcessDeepSeekHarness(fakeLaunch())
       captured = harness

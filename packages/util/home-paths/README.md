@@ -1,5 +1,5 @@
 ---
-description: "Shared resolution of the DeepSeek Harness home and user-data paths for packages that need one consistent root, tilde expansion, and stable watch paths."
+description: "Shared resolution of the Mangaba Harness home and user-data paths for packages that need one consistent root, tilde expansion, and stable watch paths."
 kind: "package-library"
 ---
 
@@ -9,7 +9,7 @@ English | [中文](README.zh.md)
 
 ## Summary
 
-`dsh-home-paths` resolves the single DeepSeek Harness home that all user data lives under, and joins child paths onto it, so every product package agrees on where its files go. Precedence is explicit: a configured path wins, then `$DSH_HOME`, then `~/.dsh`, and an empty or whitespace-only `$DSH_HOME` counts as unset. The package also expands `~`, `~/...`, and `~\...` prefixes against the operating-system home, and canonicalizes a watch target so a native filesystem watcher gets one stable path spelling even when the final components do not exist yet. It is a zero-dependency library that product packages import directly; a `cordis.yml` cannot load it.
+`dsh-home-paths` resolves the single Mangaba Harness home that all user data lives under, and joins child paths onto it, so every product package agrees on where its files go. Precedence is explicit: a configured path wins, then `$DSH_HOME`, then `~/.dsh`, and an empty or whitespace-only `$DSH_HOME` counts as unset. The package also expands `~`, `~/...`, and `~\...` prefixes against the operating-system home, and canonicalizes a watch target so a native filesystem watcher gets one stable path spelling even when the final components do not exist yet. It is a zero-dependency library that product packages import directly; a `cordis.yml` cannot load it.
 
 ## Table of Contents
 

@@ -55,7 +55,7 @@ def run_smoke(repo_root: Path, keep_sessions: bool) -> None:
     print(f"mock_base_url={base_url}")
 
     try:
-        with DeepSeekHarness(
+        with MangabaHarness(
             model="sdk-smoke-model",
             cwd=str(repo_root / "python/sdk"),
             runtime_cwd=str(repo_root),
