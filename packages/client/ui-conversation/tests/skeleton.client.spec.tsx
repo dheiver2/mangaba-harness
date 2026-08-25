@@ -461,7 +461,7 @@ describe('ConversationRoot resident composer', () => {
     const header = b.view.container.querySelector('header')
     expect(host).not.toBeNull()
     expect(header?.getAttribute('aria-hidden')).toBe('true')
-    expect(b.view.getByText('探索未至之境')).toBeTruthy()
+    expect(b.view.getByText('Mangaba Harness')).toBeTruthy()
     expect(b.view.getByText('预览版')).toBeTruthy()
     expect(b.view.queryByTestId('view-chat')).toBeNull()
     // The same machine-backed textarea is live in the hero, and the
@@ -527,7 +527,7 @@ describe('ConversationRoot resident composer', () => {
     // blank the column for the history round-trip.
     const root = b.view.container.querySelector('[data-phase]')
     expect(root?.getAttribute('data-phase')).toBe('hero')
-    expect(b.view.getByText('探索未至之境')).toBeTruthy()
+    expect(b.view.getByText('Mangaba Harness')).toBeTruthy()
     expect(b.view.getByRole('textbox')).toBeTruthy()
   })
 

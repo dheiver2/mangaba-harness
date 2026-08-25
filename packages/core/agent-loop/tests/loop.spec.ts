@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import LlmRuntime, { createUserMessage, ToolCallId, LlmError, ReasoningEffortId, StreamChunk, expandAssistantStream } from '@deepseek-ai/dsh-llm'
 import SessionStore, { SessionId, TurnEndReason } from '@deepseek-ai/dsh-session'
-import SystemPrompt from '@deepseek-ai/dsh-system-prompt'
+import SystemPrompt, { MANGABA_IDENTITY } from '@deepseek-ai/dsh-system-prompt'
 import ToolRuntime, { defineContentToolFixture } from '@deepseek-ai/dsh-tools'
 import AgentRegistry, { type Agent, type AssistantStreamFrame } from '@deepseek-ai/dsh-agent'
 
@@ -521,7 +521,7 @@ describe('agent loop', () => {
     await waitForIdle(ctx, agent)
 
     const request = adapter.requests[0]
-    expect(request!.system).toBe('You are an AI agent powered by DeepSeek Harness.\n\nYou are a test agent on mock.\n\nUse the noop tool wisely.')
+    expect(request!.system).toBe(`${MANGABA_IDENTITY}\n\nYou are a test agent on mock.\n\nUse the noop tool wisely.`)
     expect(request!.tools?.map(t => t.name)).toEqual(['noop'])
   })
 
@@ -538,7 +538,7 @@ describe('agent loop', () => {
     send(agent, 'hi')
     await waitForIdle(ctx, agent)
 
-    expect(adapter.requests[0]!.system).toBe('You are an AI agent powered by DeepSeek Harness.\n\nWorking in /work/space.')
+    expect(adapter.requests[0]!.system).toBe(`${MANGABA_IDENTITY}\n\nWorking in /work/space.`)
   })
 
   it('contains a strict-variable render failure: the turn errors, the loop keeps serving turns', async () => {
@@ -574,7 +574,7 @@ describe('agent loop', () => {
     await waitForIdle(ctx, agent)
 
     expect(adapter.requests).toHaveLength(1)
-    expect(adapter.requests[0]!.system).toBe('You are an AI agent powered by DeepSeek Harness.\n\nIn /rescued.')
+    expect(adapter.requests[0]!.system).toBe(`${MANGABA_IDENTITY}\n\nIn /rescued.`)
     const turnEnds = agent.session.snapshotEvents().filter(e => e.type === 'turn/end')
     expect(turnEnds).toHaveLength(2)
     expect(turnEnds[1]?.type === 'turn/end' && turnEnds[1].data.reason.kind).toBe('completed')
@@ -604,7 +604,7 @@ describe('agent loop', () => {
 
     expect(adapter.requests).toHaveLength(1)
     expect(adapter.requests[0]!.model).toBe('mock')
-    expect(adapter.requests[0]!.system).toBe('You are an AI agent powered by DeepSeek Harness.\n\nYou run on mock.')
+    expect(adapter.requests[0]!.system).toBe(`${MANGABA_IDENTITY}\n\nYou run on mock.`)
   })
 
   it('omits the system field when system-prompt/assemble short-circuits with an empty assembly', async () => {
