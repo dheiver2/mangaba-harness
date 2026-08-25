@@ -33,6 +33,16 @@ cd mangaba-harness
 需要 Node >= 22.19 与 pnpm；未安装 Ollama 时会跳过模型步骤（`--no-model` 可主动跳过）。
 重复执行是安全的：每一步都会先检查，已存在的 `settings.yaml` 会先备份而不是覆盖。
 
+日常使用时，`start.sh` 会一次性启动两个服务：11434 上的 Ollama 与 3081 上的 Web UI。
+
+```sh
+./start.sh            # both, in the foreground; Ctrl-C stops both
+./start.sh --detach   # both in the background
+./start.sh --stop     # stop what the script started
+```
+
+已在运行的 Ollama 会被复用，退出时不会被停掉——脚本只停止自己启动的进程。
+
 手动执行：
 
 ```sh

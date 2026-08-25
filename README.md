@@ -34,6 +34,18 @@ It needs Node >= 22.19 and pnpm; it skips the model step when Ollama is absent
 (`--no-model` skips it on purpose). Re-running is safe: each step checks first,
 and an existing `settings.yaml` is backed up rather than overwritten.
 
+Day to day, `start.sh` brings up both servers at once — Ollama on 11434 and the
+Web UI on 3081:
+
+```sh
+./start.sh            # both, in the foreground; Ctrl-C stops both
+./start.sh --detach   # both in the background
+./start.sh --stop     # stop what the script started
+```
+
+An Ollama that was already running is reused and left alone on exit; only what
+the script started is stopped.
+
 By hand:
 
 ```sh
