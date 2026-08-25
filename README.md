@@ -38,10 +38,14 @@ Day to day, `start.sh` brings up both servers at once — Ollama on 11434 and th
 Web UI on 3081:
 
 ```sh
-./start.sh            # both, in the foreground; Ctrl-C stops both
-./start.sh --detach   # both in the background
-./start.sh --stop     # stop what the script started
+mangaba            # both, in the foreground; Ctrl-C stops both
+mangaba --detach   # both in the background
+mangaba --stop     # stop what the script started
 ```
+
+`setup.sh` installs `mangaba` into `~/.local/bin` as a shortcut to this
+checkout's `start.sh`, so the command works from any directory; `./start.sh`
+does the same thing from inside the checkout.
 
 An Ollama that was already running is reused and left alone on exit; only what
 the script started is stopped.

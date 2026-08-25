@@ -88,7 +88,7 @@ echo "  logs:    $LOG_DIR"
 
 if [ "$DETACH" = 1 ]; then
   echo
-  echo "Rodando em background. Para derrubar: ./start.sh --stop"
+  echo "Rodando em background. Para derrubar: $0 --stop"
   exit 0
 fi
 

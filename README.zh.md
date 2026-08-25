@@ -36,10 +36,13 @@ cd mangaba-harness
 日常使用时，`start.sh` 会一次性启动两个服务：11434 上的 Ollama 与 3081 上的 Web UI。
 
 ```sh
-./start.sh            # both, in the foreground; Ctrl-C stops both
-./start.sh --detach   # both in the background
-./start.sh --stop     # stop what the script started
+mangaba            # both, in the foreground; Ctrl-C stops both
+mangaba --detach   # both in the background
+mangaba --stop     # stop what the script started
 ```
+
+`setup.sh` 会把 `mangaba` 安装到 `~/.local/bin`，作为本 checkout 中 `start.sh` 的快捷方式，
+因此该命令在任意目录都可用；在 checkout 内直接执行 `./start.sh` 效果相同。
 
 已在运行的 Ollama 会被复用，退出时不会被停掉——脚本只停止自己启动的进程。
 

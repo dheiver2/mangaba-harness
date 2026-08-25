@@ -91,11 +91,27 @@ else
   echo "sem modelo local — configure um provider pela tela (Settings → Models)"
 fi
 
+say "Atalho global (opcional)"
+BIN_DIR="$HOME/.local/bin"
+if [ -d "$BIN_DIR" ] && [ -w "$BIN_DIR" ]; then
+  cat > "$BIN_DIR/mangaba" <<SH
+#!/usr/bin/env bash
+# Atalho global para o Mangaba Harness: sobe Ollama + Web UI de qualquer diretório.
+exec "\${MANGABA_HOME:-$(pwd)}/start.sh" "\$@"
+SH
+  chmod +x "$BIN_DIR/mangaba"
+  echo "instalado: mangaba -> $(pwd)/start.sh"
+else
+  echo "$BIN_DIR não existe ou não é gravável — pulando o atalho"
+fi
+
 say "Pronto"
 cat <<TXT
-Rodar a Web UI:
+Subir tudo (Ollama + Web UI):
 
-  OLLAMA_API_KEY=ollama pnpm dsh web --port $PORT
+  mangaba              # ou ./start.sh, se o atalho não foi instalado
+  mangaba --detach     # em background
+  mangaba --stop       # derruba
 
 Rodar uma tarefa só, sem UI:
 
