@@ -68,6 +68,20 @@ else
   echo "ok: http://127.0.0.1:11434"
 fi
 
+# --- 1b. Credenciais opcionais ---------------------------------------------
+# Um provider remoto configurado em settings.yaml resolve sua chave por
+# apiKeyEnv, e o harness recusa a rota inteira quando a variável não existe.
+# O token do Hugging Face costuma estar no disco por causa do `hf` CLI; se
+# estiver, ele entra no ambiente do servidor. Um HF_TOKEN já exportado vence.
+HF_TOKEN_FILE="${HF_TOKEN_FILE:-$HOME/.cache/huggingface/token}"
+if [ -z "${HF_TOKEN:-}" ] && [ -r "$HF_TOKEN_FILE" ]; then
+  HF_TOKEN=$(tr -d '\r\n' < "$HF_TOKEN_FILE")
+  if [ -n "$HF_TOKEN" ]; then
+    export HF_TOKEN
+    say "HF_TOKEN carregado de $HF_TOKEN_FILE"
+  fi
+fi
+
 # --- 2. Web UI -------------------------------------------------------------
 if web_up; then
   die "já existe algo respondendo na porta $PORT — use MH_PORT=outra ou ./start.sh --stop"

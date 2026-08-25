@@ -47,6 +47,13 @@ mangaba --stop     # stop what the script started
 checkout's `start.sh`, so the command works from any directory; `./start.sh`
 does the same thing from inside the checkout.
 
+A remote provider configured in `settings.yaml` resolves its key through
+`apiKeyEnv`, and the harness refuses the whole route when that variable is
+unset. `start.sh` therefore reads `~/.cache/huggingface/token` — where the `hf`
+CLI leaves it — into `HF_TOKEN` when the variable is not already exported.
+Point `HF_TOKEN_FILE` elsewhere to read another path; an exported `HF_TOKEN`
+always wins.
+
 An Ollama that was already running is reused and left alone on exit; only what
 the script started is stopped.
 

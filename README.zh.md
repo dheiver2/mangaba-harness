@@ -44,6 +44,11 @@ mangaba --stop     # stop what the script started
 `setup.sh` 会把 `mangaba` 安装到 `~/.local/bin`，作为本 checkout 中 `start.sh` 的快捷方式，
 因此该命令在任意目录都可用；在 checkout 内直接执行 `./start.sh` 效果相同。
 
+在 `settings.yaml` 中配置的远程 provider 通过 `apiKeyEnv` 解析密钥；该变量缺失时，
+harness 会直接拒绝整条路由。因此当 `HF_TOKEN` 尚未导出时，`start.sh` 会从 `hf` CLI
+留下的 `~/.cache/huggingface/token` 读取它。可用 `HF_TOKEN_FILE` 指向其他路径；
+已导出的 `HF_TOKEN` 始终优先。
+
 已在运行的 Ollama 会被复用，退出时不会被停掉——脚本只停止自己启动的进程。
 
 手动执行：
