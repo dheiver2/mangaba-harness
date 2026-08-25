@@ -75,8 +75,8 @@
     - id: agent-default-model
       name: '@deepseek-ai/dsh-agent-default-model'
       config:
-        provider: deepseek-official
-        model: deepseek-v4-flash
+        provider: mangaba-local
+        model: mangaba:8b
 
     - id: jobs
       name: '@deepseek-ai/dsh-jobs-local'
@@ -85,7 +85,7 @@
       name: '@deepseek-ai/dsh-llm-retry'
 
     # User-settings document (`$DSH_HOME/settings.yaml`, hot-reloaded): a
-    # `llm-deepseek:` or `llm-pi-ai:` section there overrides the adapter entries
+    # `llm-pi-ai:` section there overrides the adapter entries
     # below without a restart, and is what the web Models page writes.
     - id: settings
       name: '@deepseek-ai/dsh-settings-file'
@@ -193,7 +193,9 @@
         mode: !!js process.env.DSH_TELEMETRY_MODE || 'FEEDBACK_ONLY'
         shutdownTimeoutMillis: 3000
         exporter:
-          url: !!js process.env.DSH_TELEMETRY_OTLP_URL ?? 'https://harness-telemetry.deepseeksvc.com/v1/logs'
+          # No collector is baked in: this distribution ships no telemetry
+          # backend of its own, so the endpoint is whatever the deployment sets.
+          url: !!js process.env.DSH_TELEMETRY_OTLP_URL ?? ''
           compression: gzip
           timeoutMillis: 1000
         processor:
@@ -489,10 +491,3 @@
     # overlay can pin another workspace.
     - id: fs-sandbox
       name: '@deepseek-ai/dsh-fs-sandbox'
-
-    # The native DeepSeek adapter. No key or endpoint is inlined: both resolve per
-    # request from the `llm-deepseek:` settings section over this entry, with the
-    # key coming from the credential store below. Thinking defaults are a deployment
-    # choice.
-    - id: llm-deepseek
-      name: '@deepseek-ai/dsh-llm-deepseek'
