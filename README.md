@@ -6,11 +6,25 @@
 
 English | [中文](README.zh.md)
 
-Mangaba Harness (`mh`) is an open-source agent harness — a rebranded distribution of
-[DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) (MIT), carrying the
-Mangaba identity and defaults.
+An open-source agent harness with a browser UI, running local or remote models.
 
-It is built on an **everything-is-a-plugin** architecture and powered by [Cordis](https://github.com/cordiverse/cordis), whose design is described in [_A Programming Paradigm for Spatiotemporal Composability_](https://arxiv.org/abs/2608.25512).
+```sh
+git clone https://github.com/dheiver2/mangaba-harness.git
+cd mangaba-harness
+./setup.sh --run
+```
+
+That is the whole setup: it checks what is missing, installs dependencies,
+builds, pulls one ~2.5GB local model, writes the provider settings, and opens
+the Web UI at `http://127.0.0.1:3081`. It needs Node >= 22.19, pnpm, and — for
+the local model — Ollama; anything absent is reported in one list with the
+command that installs it.
+
+Mangaba Harness is a rebranded distribution of
+[DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) (MIT), carrying the
+Mangaba identity and defaults. It is built on an **everything-is-a-plugin** architecture
+and powered by [Cordis](https://github.com/cordiverse/cordis), whose design is described
+in [_A Programming Paradigm for Spatiotemporal Composability_](https://arxiv.org/abs/2608.25512).
 
 ## Developer preview
 
@@ -21,18 +35,16 @@ Review the [safety notice](SAFETY.md) before running the project.
 
 ## Run
 
-On a fresh machine, `setup.sh` does everything — dependencies, build, the local
-Ollama models, and the provider settings:
+Setup options, beyond the plain `./setup.sh --run` above:
 
 ```sh
-git clone https://github.com/dheiver2/mangaba-harness.git
-cd mangaba-harness
-./setup.sh --run
+./setup.sh --full       # also pull the 8B model — slower on a 16GB machine
+./setup.sh --no-model   # skip Ollama entirely, for a remote provider only
 ```
 
-It needs Node >= 22.19 and pnpm; it skips the model step when Ollama is absent
-(`--no-model` skips it on purpose). Re-running is safe: each step checks first,
-and an existing `settings.yaml` is backed up rather than overwritten.
+Re-running is safe: each step checks first, an existing `settings.yaml` is
+backed up rather than overwritten, and a `mangaba` command already pointing at
+another checkout is left alone.
 
 Day to day, `start.sh` brings up both servers at once — Ollama on 11434 and the
 Web UI on 3081:

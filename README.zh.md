@@ -6,11 +6,22 @@
 
 [English](README.md) | 中文
 
-Mangaba Harness（`mh`）是一个开源 agent harness（智能体框架），是
-[DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness)（MIT）的品牌重塑发行版，
-承载 Mangaba 的视觉标识与默认配置。
+一个开源的 agent harness（智能体框架），自带浏览器 UI，可运行本地或远程模型。
 
-它构建于**一切皆插件**的架构之上，由 [Cordis](https://github.com/cordiverse/cordis) 驱动，其设计参见论文 [_A Programming Paradigm for Spatiotemporal Composability_](https://arxiv.org/abs/2608.25512)。
+```sh
+git clone https://github.com/dheiver2/mangaba-harness.git
+cd mangaba-harness
+./setup.sh --run
+```
+
+这就是全部安装步骤：它会检查缺失项、安装依赖、构建、拉取一个约 2.5GB 的本地模型、
+写入 provider 配置，并在 `http://127.0.0.1:3081` 打开 Web UI。需要 Node >= 22.19、pnpm，
+以及（若要本地模型）Ollama；任何缺失项都会一次性列出，并附上安装命令。
+
+Mangaba Harness 是 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness)（MIT）
+的品牌重塑发行版，承载 Mangaba 的视觉标识与默认配置。它构建于**一切皆插件**的架构之上，
+由 [Cordis](https://github.com/cordiverse/cordis) 驱动，其设计参见论文
+[_A Programming Paradigm for Spatiotemporal Composability_](https://arxiv.org/abs/2608.25512)。
 
 ## 开发者预览
 
@@ -22,16 +33,15 @@ Mangaba Harness 目前处于 _开发者预览_ 阶段，正在快速迭代。**�
 
 ## 运行
 
-在新机器上，`setup.sh` 会完成全部步骤：依赖、构建、本地 Ollama 模型与 provider 配置。
+除了上面的 `./setup.sh --run`，还有这些选项：
 
 ```sh
-git clone https://github.com/dheiver2/mangaba-harness.git
-cd mangaba-harness
-./setup.sh --run
+./setup.sh --full       # also pull the 8B model — slower on a 16GB machine
+./setup.sh --no-model   # skip Ollama entirely, for a remote provider only
 ```
 
-需要 Node >= 22.19 与 pnpm；未安装 Ollama 时会跳过模型步骤（`--no-model` 可主动跳过）。
-重复执行是安全的：每一步都会先检查，已存在的 `settings.yaml` 会先备份而不是覆盖。
+重复执行是安全的：每一步都会先检查，已存在的 `settings.yaml` 会先备份而不是覆盖，
+已指向其他 checkout 的 `mangaba` 命令也不会被改动。
 
 日常使用时，`start.sh` 会一次性启动两个服务：11434 上的 Ollama 与 3081 上的 Web UI。
 
