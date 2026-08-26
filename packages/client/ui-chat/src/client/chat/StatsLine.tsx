@@ -170,7 +170,29 @@ export const StatsLine = memo(function StatsLine({ useChat, useProjection, t }: 
   const projected = useProjection('sessionStats')
   const stats = useMemo(() => projected ?? deriveStats(settledNodes), [projected, settledNodes])
   // Pipe-separated groups (figma stats strip); a group with no data drops out whole.
+  //
+  // Order is by what the reader loses when the row elides. The row is one
+  // nowrap line ending in an ellipsis, so whatever sits last is what a narrow
+  // window hides first: billing leads, because token spend is the figure a user
+  // acts on, and latency diagnostics trail, because they are read while
+  // watching a run rather than after it. The hover tooltip still carries the
+  // whole line either way.
   const groups: string[] = []
+  // Context occupancy deliberately lives on the composer's ContextMeter ring,
+  // not here — one home per fact.
+  // Billing rides the durable projection, so these survive paging and
+  // compaction. Gated on actual token activity: a session whose steps all
+  // settled without billing (e.g. every request failed) shows its counts
+  // without a zero-token group.
+  if (usage !== undefined
+    && (billedInputTokens(usage) > 0 || usage.outputTokens > 0)) {
+    groups.push(t('stats.tokens', {
+      input: formatTokens(billedInputTokens(usage)),
+      output: formatTokens(usage.outputTokens),
+    }))
+    const cacheHit = cacheHitPercent(usage)
+    if (cacheHit !== null) groups.push(t('stats.cacheHit', { percent: cacheHit }))
+  }
   if (stats.steps > 0) {
     groups.push(t('stats.counts', { turns: stats.turns, steps: stats.steps }))
     const durations: string[] = []
@@ -187,21 +209,6 @@ export const StatsLine = memo(function StatsLine({ useChat, useProjection, t }: 
       }))
     }
     if (speeds.length > 0) groups.push(speeds.join(' · '))
-  }
-  // Context occupancy deliberately lives on the composer's ContextMeter ring,
-  // not here — one home per fact.
-  // Billing rides the durable projection, so these survive paging and
-  // compaction. Gated on actual token activity: a session whose steps all
-  // settled without billing (e.g. every request failed) shows its counts
-  // without a zero-token group.
-  if (usage !== undefined
-    && (billedInputTokens(usage) > 0 || usage.outputTokens > 0)) {
-    const cacheHit = cacheHitPercent(usage)
-    if (cacheHit !== null) groups.push(t('stats.cacheHit', { percent: cacheHit }))
-    groups.push(t('stats.tokens', {
-      input: formatTokens(billedInputTokens(usage), t),
-      output: formatTokens(usage.outputTokens, t),
-    }))
   }
   const line = groups.join(' | ')
   if (groups.length === 0) return null
