@@ -61,10 +61,17 @@ does the same thing from inside the checkout.
 
 A remote provider configured in `settings.yaml` resolves its key through
 `apiKeyEnv`, and the harness refuses the whole route when that variable is
-unset. `start.sh` therefore reads `~/.cache/huggingface/token` — where the `hf`
-CLI leaves it — into `HF_TOKEN` when the variable is not already exported.
-Point `HF_TOKEN_FILE` elsewhere to read another path; an exported `HF_TOKEN`
-always wins.
+unset. `start.sh` therefore loads two keys from disk when the variables are not
+already exported:
+
+| Variable | Read from | Used by |
+|---|---|---|
+| `HF_TOKEN` | `~/.cache/huggingface/token` (where the `hf` CLI leaves it) | Hugging Face router |
+| `MANGABA_API_KEY` | `~/.config/mangaba/api-key` | `app.mangaba.ia.br`, `chat.mangaba.ia.br` |
+
+`HF_TOKEN_FILE` and `MANGABA_KEY_FILE` point elsewhere; an already-exported
+variable always wins, and an absent file is silent. Keys stay out of
+`settings.yaml`, which the Models page rewrites.
 
 An Ollama that was already running is reused and left alone on exit; only what
 the script started is stopped.

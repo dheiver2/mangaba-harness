@@ -55,9 +55,15 @@ mangaba --stop     # stop what the script started
 因此该命令在任意目录都可用；在 checkout 内直接执行 `./start.sh` 效果相同。
 
 在 `settings.yaml` 中配置的远程 provider 通过 `apiKeyEnv` 解析密钥；该变量缺失时，
-harness 会直接拒绝整条路由。因此当 `HF_TOKEN` 尚未导出时，`start.sh` 会从 `hf` CLI
-留下的 `~/.cache/huggingface/token` 读取它。可用 `HF_TOKEN_FILE` 指向其他路径；
-已导出的 `HF_TOKEN` 始终优先。
+harness 会直接拒绝整条路由。因此当变量尚未导出时，`start.sh` 会从磁盘加载两个密钥：
+
+| Variable | Read from | Used by |
+|---|---|---|
+| `HF_TOKEN` | `~/.cache/huggingface/token` (where the `hf` CLI leaves it) | Hugging Face router |
+| `MANGABA_API_KEY` | `~/.config/mangaba/api-key` | `app.mangaba.ia.br`, `chat.mangaba.ia.br` |
+
+`HF_TOKEN_FILE` 与 `MANGABA_KEY_FILE` 可指向其他路径；已导出的变量始终优先，
+文件不存在时保持静默。密钥不写入 `settings.yaml`——该文件会被「模型」页面重写。
 
 已在运行的 Ollama 会被复用，退出时不会被停掉——脚本只停止自己启动的进程。
 

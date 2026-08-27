@@ -73,14 +73,25 @@ fi
 # apiKeyEnv, e o harness recusa a rota inteira quando a variável não existe.
 # O token do Hugging Face costuma estar no disco por causa do `hf` CLI; se
 # estiver, ele entra no ambiente do servidor. Um HF_TOKEN já exportado vence.
+load_key() {
+  # $1 variable name, $2 file to read it from
+  eval "current=\${$1:-}"
+  [ -n "$current" ] && return 0
+  [ -r "$2" ] || return 0
+  value=$(tr -d '\r\n' < "$2")
+  [ -z "$value" ] && return 0
+  export "$1=$value"
+  say "$1 carregado de $2"
+}
+
 HF_TOKEN_FILE="${HF_TOKEN_FILE:-$HOME/.cache/huggingface/token}"
-if [ -z "${HF_TOKEN:-}" ] && [ -r "$HF_TOKEN_FILE" ]; then
-  HF_TOKEN=$(tr -d '\r\n' < "$HF_TOKEN_FILE")
-  if [ -n "$HF_TOKEN" ]; then
-    export HF_TOKEN
-    say "HF_TOKEN carregado de $HF_TOKEN_FILE"
-  fi
-fi
+load_key HF_TOKEN "$HF_TOKEN_FILE"
+
+# The Mangaba providers (app.mangaba.ia.br, chat.mangaba.ia.br) resolve this
+# one. Kept in a file outside the settings document, which the Models page
+# rewrites and which is easy to paste into a screenshot or a commit.
+MANGABA_KEY_FILE="${MANGABA_KEY_FILE:-$HOME/.config/mangaba/api-key}"
+load_key MANGABA_API_KEY "$MANGABA_KEY_FILE"
 
 # --- 2. Web UI -------------------------------------------------------------
 if web_up; then
