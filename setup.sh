@@ -37,20 +37,67 @@ die() { printf '\033[31merro: %s\033[0m\n' "$1" >&2; exit 1; }
 # newcomer through install → rerun → next gap → rerun, which is the slowest way
 # to learn what the project needs.
 say "Checando pré-requisitos"
-MISSING=""
+MISSING_NAMES=""
+MISSING_LINES=""
+BREW_PACKAGES=""
+NEEDS_PNPM=0
+
+want() {
+  # $1 display name, $2 the command that installs it, $3 optional brew package
+  MISSING_NAMES="$MISSING_NAMES $1"
+  MISSING_LINES="$MISSING_LINES\n  $1\n      $2"
+  [ -n "${3:-}" ] && BREW_PACKAGES="$BREW_PACKAGES $3"
+}
+
 if ! command -v node >/dev/null; then
-  MISSING="$MISSING\n  node        brew install node          (precisa de >= 22.19)"
+  want "node (>= 22.19)" "brew install node" "node"
 elif [ "$(node -p 'process.versions.node.split(".")[0]')" -lt 22 ]; then
-  MISSING="$MISSING\n  node $(node -v)  brew upgrade node          (precisa de >= 22.19)"
+  want "node $(node -v) é antigo (precisa >= 22.19)" "brew upgrade node"
 fi
-command -v pnpm >/dev/null || MISSING="$MISSING\n  pnpm        npm i -g pnpm@11"
+if ! command -v pnpm >/dev/null; then
+  want "pnpm" "npm i -g pnpm@11"
+  NEEDS_PNPM=1
+fi
 if [ "$WITH_MODEL" = 1 ] && ! command -v ollama >/dev/null; then
-  MISSING="$MISSING\n  ollama      brew install ollama && brew services start ollama"
-  MISSING="$MISSING\n              (ou rode com --no-model e configure um provider remoto)"
+  want "ollama (para o modelo local; --no-model dispensa)" "brew install ollama && brew services start ollama" "ollama"
 fi
-if [ -n "$MISSING" ]; then
-  printf '\033[31mFaltam pré-requisitos:\033[0m'
-  printf "$MISSING\n\n"
+
+if [ -n "$MISSING_NAMES" ]; then
+  printf '\n\033[1mFalta instalar:\033[0m'
+  printf "$MISSING_LINES\n\n"
+
+  # Offering to run the installs is the difference between "the project told me
+  # what to do" and "the project did it". The offer is only made when it can be
+  # honored: Homebrew present for brew packages, npm present for pnpm, and a
+  # real terminal to answer in. Everything else prints the commands and stops.
+  CAN_INSTALL=0
+  [ -n "$BREW_PACKAGES" ] && command -v brew >/dev/null && CAN_INSTALL=1
+  [ "$NEEDS_PNPM" = 1 ] && command -v npm >/dev/null && CAN_INSTALL=1
+  if [ "$CAN_INSTALL" = 1 ] && [ -t 0 ]; then
+    printf 'Quer que eu instale agora? [s/N] '
+    read -r REPLY
+    case "$REPLY" in
+      s|S|y|Y)
+        if [ -n "$BREW_PACKAGES" ]; then
+          say "brew install$BREW_PACKAGES"
+          # shellcheck disable=SC2086
+          brew install $BREW_PACKAGES
+          case "$BREW_PACKAGES" in *ollama*) brew services start ollama ;; esac
+        fi
+        if [ "$NEEDS_PNPM" = 1 ]; then
+          say "npm i -g pnpm@11"
+          npm i -g pnpm@11
+        fi
+        echo
+        echo "Instalado. Rodando o setup de novo para continuar:"
+        exec "$0" "$@"
+        ;;
+    esac
+  elif [ -n "$BREW_PACKAGES" ] && ! command -v brew >/dev/null; then
+    echo "Homebrew não está instalado — ele é a forma usual de instalar isso no Mac:"
+    echo '  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
+    echo
+  fi
   exit 1
 fi
 echo "node $(node -v), pnpm $(pnpm -v)$(command -v ollama >/dev/null && echo ", ollama $(ollama --version 2>/dev/null | tail -1)")"

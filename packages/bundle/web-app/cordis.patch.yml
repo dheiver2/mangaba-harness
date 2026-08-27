@@ -58,8 +58,16 @@
     - id: session-log-download
       name: '@deepseek-ai/dsh-session-log-export'
 
+    # A first run has no workspace, and the composer stays inert until one is
+    # chosen — a dead end for anyone who does not already know what a workspace
+    # is. The Web deployment adopts a directory of its own so the first session
+    # can be typed into immediately; the picker still owns every choice after
+    # that. The name is the product's, not the brand's: a bare ~/Mangaba would
+    # collide with whatever else a Mangaba user already keeps there.
     - id: workspace
       name: '@deepseek-ai/dsh-workspace'
+      config:
+        initialPath: !!js userHomePath('Mangaba Harness')
 
     - id: session-reference
       name: '@deepseek-ai/dsh-session-reference'

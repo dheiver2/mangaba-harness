@@ -100,6 +100,20 @@ export function dshHomePath(...segments: string[]): string {
 }
 
 /**
+ * Join path segments onto the OS home directory.
+ *
+ * Distinct from {@link dshHomePath}, which resolves the harness's own private
+ * home (`~/.dsh`): this one names a place the user opens in Finder or Explorer.
+ * It exists for composition values like a first-run workspace directory, where
+ * a `!!js` expression in cordis.yml has no `join` or `homedir` in scope.
+ * @param segments - path segments appended to the OS home; an empty list returns the home itself.
+ * @returns the normalized absolute joined path.
+ */
+export function userHomePath(...segments: string[]): string {
+  return join(homedir(), ...segments)
+}
+
+/**
  * Describe a resolved harness home symbolically for user-facing display.
  *
  * It never returns an absolute machine path: the default home is labelled

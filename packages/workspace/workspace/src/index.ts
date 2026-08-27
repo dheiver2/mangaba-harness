@@ -6,8 +6,9 @@
  */
 
 import { randomUUID } from 'node:crypto'
-import { stat } from 'node:fs/promises'
+import { mkdir, stat } from 'node:fs/promises'
 import { Context, Service } from '@deepseek-ai/cordis'
+import z from '@deepseek-ai/schemastery'
 import type { SessionHeader, SessionId } from '@deepseek-ai/dsh-session'
 import type {} from '@deepseek-ai/dsh-session-persistence'
 import type { DomainGlobal, KvTable } from '@deepseek-ai/dsh-storage-domain'
@@ -24,6 +25,26 @@ export type { Workspace } from './types.ts'
 export { workspaceDomainState, workspaceRecord, workspaceDomainSpec } from './spec.ts'
 export type { WorkspaceDomainState, WorkspaceRecord } from './spec.ts'
 export { realpathNormalize } from './paths.ts'
+
+/**
+ * Deployment configuration for the registry.
+ *
+ * `initialPath` exists because a first-run registry is empty, and an empty
+ * registry leaves the composer inert: it asks the user to choose a workspace
+ * before they can type anything, without saying what a workspace is or which
+ * directory to pick. A deployment that knows where its users' work belongs
+ * names that directory here and the first session opens ready to use. Omitted,
+ * the registry stays empty and the picker leads, which is the right behavior
+ * where no such directory can be assumed.
+ */
+export interface Config {
+  /** Directory to adopt as the sole workspace on a first run; created when absent. */
+  initialPath?: string
+}
+
+export const Config: z<Config> = z.object({
+  initialPath: z.string().required(false),
+})
 
 /** Identifies one workspace record (see `src/types.ts` for the brand rationale). */
 export type WorkspaceId = WorkspaceIdBrand
@@ -91,6 +112,8 @@ const compareHeaders = (left: SessionHeader, right: SessionHeader): number =>
 export class WorkspaceRegistry extends Service {
   static inject = ['storageDomain', 'sessionPersistence']
 
+  static Config: z<Config> = Config
+
   private table?: KvTable<WorkspaceId, WorkspaceRecord>
   private global?: DomainGlobal<WorkspaceDomainState>
   private state?: WorkspaceDomainState
@@ -110,7 +133,7 @@ export class WorkspaceRegistry extends Service {
     },
   }
 
-  constructor(ctx: Context) {
+  constructor(ctx: Context, public config: Config = {}) {
     super(ctx, 'workspaceRegistry')
   }
 
@@ -136,6 +159,28 @@ export class WorkspaceRegistry extends Service {
     this.validateStoredState(this.requireState())
     this.rebuildEntities()
     this.reportFilteredCandidates()
+    await this.adoptInitialPath()
+  }
+
+  /**
+   * Adopt the configured `initialPath` when the registry holds no workspace at
+   * all — the first run, or a deployment whose every workspace was removed.
+   *
+   * The directory is created when absent, because the point is a composer that
+   * works on first launch, and a configured path that does not exist yet is the
+   * common first-run case rather than an error. A failure here is logged and
+   * swallowed: an unwritable home directory must not keep the harness from
+   * starting, and the picker remains the way to choose one by hand.
+   */
+  private async adoptInitialPath(): Promise<void> {
+    const path = this.config.initialPath
+    if (path === undefined || this.entities.size > 0) return
+    try {
+      await mkdir(path, { recursive: true })
+      await this.create(path)
+    } catch (error) {
+      this.ctx.logger.warn('workspace: could not adopt initial path %c: %o', path, error)
+    }
   }
 
   /**

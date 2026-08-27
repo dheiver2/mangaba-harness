@@ -127,17 +127,40 @@ function ModelRetryItem({ node, active, t }: {
   )
 }
 
+/**
+ * Codes this UI can explain in the reader's own terms.
+ *
+ * The adapter's own message names the failure precisely and tells a developer
+ * what to change, but it is written in the vocabulary of the request — routes,
+ * credential references, apiKeyEnv — which leaves anyone else reading a wall of
+ * red with no next step. A known code gets a sentence that says what to do; the
+ * original text stays on the row's tooltip, since it is what a bug report needs.
+ */
+const EXPLAINED_CODES = new Set([
+  'MISSING_CREDENTIAL',
+  'INVALID_CREDENTIAL',
+  'UNKNOWN_MODEL',
+  'TRANSPORT',
+  'TIMEOUT',
+  'RATE_LIMIT',
+  'QUOTA',
+  'CONTEXT_WINDOW_EXCEEDED',
+])
+
 /** Persistent, turn-positioned feedback for a terminal failure. */
 function TurnErrorItem({ node, t }: {
   node: TurnErrorNode
   t: ChatViewSlotProps['t']
 }) {
+  const explained = node.code !== undefined && EXPLAINED_CODES.has(node.code)
   return (
     <div className={css.turnErrorRow} role="status">
       <StateDot state="error" className={css.turnErrorDot} />
       <div className={css.turnErrorCopy}>
         <span className={css.turnErrorTitle}>{t('message.turnError')}</span>
-        <span className={css.turnErrorMessage}>{failureMessage(node.message, node.code, t)}</span>
+        <span className={css.turnErrorMessage} title={explained ? node.message : undefined}>
+          {explained ? t(`error.${node.code as string}` as Parameters<typeof t>[0]) : node.message}
+        </span>
       </div>
       {node.code !== undefined && <code className={css.turnErrorCode}>{node.code}</code>}
     </div>

@@ -36,6 +36,7 @@ interface HarnessOptions {
   liveSessions?: SessionHeader[]
   sessionStore?: boolean
   backend?: StorageBackend
+  initialPath?: string
 }
 
 /** Boot the real storage/domain/registry composition over controllable header-only peers. */
@@ -67,7 +68,8 @@ async function harness(options: HarnessOptions = {}) {
 
   const changes: DomainChanged[] = []
   ctx.on('domain/changed', (change) => { changes.push(change) })
-  const fiber = await ctx.plugin(WorkspaceRegistry)
+  const fiber = await ctx.plugin(WorkspaceRegistry,
+    options.initialPath === undefined ? {} : { initialPath: options.initialPath })
   const initChanges = [...changes]
   changes.length = 0
   return {
@@ -189,6 +191,29 @@ afterEach(async () => {
 })
 
 describe('WorkspaceRegistry lifecycle and bootstrap', () => {
+  it('adopts a configured initial path on a first run, creating the directory', async () => {
+    // The composer is inert until a workspace exists, so a deployment that can
+    // name one spares its users a picker they have no basis to answer.
+    // makeDir seeds the shared temp base; the adopted path itself must not exist.
+    const initialPath = join(await makeDir('base-primeiro-uso'), 'primeiro-uso')
+    const { ctx } = await harness({ initialPath })
+    const adopted = ctx.workspaceRegistry.list()
+    expect(adopted).toHaveLength(1)
+    expect(adopted[0]?.path).toBe(await realpath(initialPath))
+  })
+
+  it('leaves an existing registry alone, and survives an unusable initial path', async () => {
+    const existing = await makeDir('ja-existe')
+    const { ctx } = await harness({ initialPath: existing })
+    expect(ctx.workspaceRegistry.list()).toHaveLength(1)
+
+    // A file where the directory should be: startup must not fail over it.
+    const blocked = join(await makeDir('base-bloqueada'), 'arquivo-no-caminho')
+    await writeFile(blocked, 'not a directory')
+    const second = await harness({ initialPath: blocked })
+    expect(second.ctx.workspaceRegistry.list()).toEqual([])
+  })
+
   it('stays pending without sessionPersistence and never opens or marks the domain', async () => {
     const pool = new MemoryMediaPool()
     const ctx = await storageContext(pool)

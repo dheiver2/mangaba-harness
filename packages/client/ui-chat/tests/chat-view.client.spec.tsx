@@ -1285,6 +1285,18 @@ describe('ChatView', () => {
     ])
   })
 
+  it('explains a known failure code, keeping the adapter text on the tooltip', () => {
+    // The adapter message names routes and credential references; a reader who
+    // did not write the config needs the next action instead, and a bug report
+    // still needs the original.
+    const h = makeHarness({ nodes: [user(1, 'try'), turnError(2, 'MISSING_CREDENTIAL')] })
+    const view = render(<h.ChatView {...h.props} />)
+    const status = view.getAllByRole('status')[0] as HTMLElement
+    expect(status.textContent).toContain('该 provider 还没有 API key')
+    expect(status.textContent).not.toContain('API key is invalid')
+    expect(view.container.querySelector('[title="API key is invalid"]')).not.toBeNull()
+  })
+
   it('renders the max-tokens notice with localized guidance, distinct from turn errors', () => {
     const h = makeHarness({ nodes: [user(1, 'try'), assistant(2, 'truncated'), turnMaxTokens(3)] })
     const view = render(<h.ChatView {...h.props} />)
