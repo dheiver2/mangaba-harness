@@ -331,3 +331,43 @@ export const en = {
   'terminal.sendInput': '(send input)',
   'terminal.session': 'Terminal {sessionId}',
 } satisfies Record<ConversationKey, string>
+
+/**
+ * Brazilian Portuguese dictionary; partial by design (see the locale package).
+ * Covers what a reader looks at constantly — the composer, the hero, the status
+ * rows and the stats strip. A key absent here reads in English rather than
+ * blank, so this list grows a screen at a time.
+ */
+export const pt = {
+  'view.chat': 'Conversa',
+  'placeholder.default': 'Escreva para o agente',
+  'placeholder.hero': 'Descreva o que você quer construir',
+  'placeholder.workspace': 'Escolha uma pasta para começar',
+  'placeholder.unavailable': 'Sessão indisponível',
+  'hero.preview': 'Prévia',
+  'hero.chooseWorkspace': 'Escolher pasta',
+  'message.contextInjection': 'Contexto injetado',
+  'message.contextRecall': 'Contexto recuperado',
+  'message.turnError': 'Este turno falhou',
+  'message.compaction': 'Compactação',
+  'message.compaction.running': 'Compactando…',
+  'message.compaction.completed': 'Compactação concluída',
+  'message.compaction.expand': 'Ver detalhes',
+  'row.running': 'Executando',
+  'row.thinkLines': 'Pensou · {lines} linhas',
+  'stats.counts': '{turns} turnos · {steps} passos',
+  'stats.llm': 'LLM {duration}',
+  'stats.toolCall': 'Ferramentas {duration}',
+  'stats.ttftAverage': '1º token {duration}',
+  'stats.tokensPerSecond': '{throughput} tok/s',
+  'stats.cacheHit': 'Cache {percent}%',
+  'stats.tokens': 'Entrada {input} tok · Saída {output} tok',
+  'error.MISSING_CREDENTIAL': 'Este provedor ainda não tem chave de API. Abra Configurações → Modelos e informe uma.',
+  'error.INVALID_CREDENTIAL': 'O provedor recusou esta chave de API. Informe-a de novo em Configurações → Modelos.',
+  'error.UNKNOWN_MODEL': 'O modelo selecionado não está configurado. Escolha outro no seletor.',
+  'error.TRANSPORT': 'Não foi possível falar com o provedor. Se o modelo é local, confira se o Ollama está no ar; se é remoto, confira a conexão.',
+  'error.TIMEOUT': 'O provedor não respondeu a tempo. Um modelo local pequeno é lento em prompts longos — tente de novo ou escolha um menor.',
+  'error.RATE_LIMIT': 'O provedor está limitando as requisições desta conta. Tente daqui a pouco.',
+  'error.QUOTA': 'Esta conta está sem saldo.',
+  'error.CONTEXT_WINDOW_EXCEEDED': 'Esta sessão passou do limite de contexto do modelo. Comece uma sessão nova ou escolha um modelo com contexto maior.',
+} satisfies Partial<Record<ConversationKey, string>>

@@ -54,3 +54,24 @@ export const en = {
   'blocked.composer': 'This model is unavailable — select one to continue',
   'empty.efforts': 'This model provides no reasoning effort levels.',
 } satisfies Record<ModelKey, string>
+
+/** Brazilian Portuguese dictionary; partial by design (see the locale package). */
+export const pt = {
+  'command.description': 'Escolher o modelo desta conversa',
+  'option.loadError': 'Falha ao carregar o catálogo: {message}',
+  'trigger.fallback': 'Escolher modelo',
+  'trigger.selectAria': 'Escolher modelo',
+  'trigger.aria': 'Escolher modelo, atual {model}',
+  'trigger.ariaEffort': 'Escolher modelo, atual {model}, esforço de raciocínio {effort}',
+  'menu.aria': 'Modelo e esforço de raciocínio',
+  'menu.model': 'Modelo',
+  'menu.effort': 'Esforço',
+  'effort.providerDefault': 'Padrão',
+  'status.loading': 'Atualizando a lista de modelos…',
+  'error.action': 'Falha na operação de modelo: {message}',
+  'action.reload': 'Recarregar',
+  'warning.groupLoad': 'Falha ao carregar {name}: {message}',
+  'empty.models': 'Nenhum modelo disponível.',
+  'blocked.composer': 'Este modelo está indisponível — escolha outro para continuar',
+  'empty.efforts': 'Este modelo não oferece níveis de esforço de raciocínio.',
+} satisfies Partial<Record<ModelKey, string>>

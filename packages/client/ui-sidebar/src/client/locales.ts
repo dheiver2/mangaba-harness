@@ -18,3 +18,11 @@ export const en = {
   'toggle.open': 'Open sidebar',
   'toggle.collapse': 'Collapse sidebar',
 } satisfies Record<SidebarKey, string>
+
+/** Brazilian Portuguese dictionary; partial by design (see the locale package). */
+export const pt = {
+  'session.new': 'Nova sessão',
+  'session.new.label': 'Nova sessão',
+  'toggle.open': 'Abrir barra lateral',
+  'toggle.collapse': 'Recolher barra lateral',
+} satisfies Partial<Record<SidebarKey, string>>

@@ -16,11 +16,11 @@ import type { SettingsScope } from '@deepseek-ai/dsh-client-ui-settings/client'
 import type {} from '@deepseek-ai/dsh-client-ui-renderer/client'
 import {
   LOCALE_ID_PATTERN, LOCALE_IDS, LOCALE_PREFERENCE_FIELD, LOCALE_SETTINGS_NAMESPACE,
-  type BuiltInLocaleId, type LocaleId, type LocaleSettings,
+  type BuiltInLocaleId, type LocaleId, type LocaleSettings, type SourceLocaleId,
 } from '../locale-settings.ts'
-import { en, zh, type CommonKey } from '../locales/index.ts'
+import { en, pt, zh, type CommonKey } from '../locales/index.ts'
 import {
-  en as settingsEn, zh as settingsZh, type SettingsLocaleKey,
+  en as settingsEn, pt as settingsPt, zh as settingsZh, type SettingsLocaleKey,
 } from '../locales/settings.ts'
 import type { LanguageRowInjected } from './LanguageRow.tsx'
 import { LanguageRow } from './LanguageRow.tsx'
@@ -29,7 +29,7 @@ import { createLanguageRowStore } from './settings-store.ts'
 export type { LanguageRowComponentProps, LanguageRowInjected } from './LanguageRow.tsx'
 export type { LanguageOptionRow, LanguageRowState } from './settings-store.ts'
 export type { CommonKey } from '../locales/index.ts'
-export type { BuiltInLocaleId, LocaleId, LocaleSettings } from '../locale-settings.ts'
+export type { BuiltInLocaleId, LocaleId, LocaleSettings, SourceLocaleId } from '../locale-settings.ts'
 
 // The translate currency lives in ui-slots (the render machinery synthesizes
 // the seat); re-exported here so dictionary owners import one package.
@@ -112,10 +112,17 @@ export const COMMON_NS = 'common'
 /** Namespace owning this feature's settings-row copy. */
 export const SETTINGS_NS = 'settings.locale'
 
-/** The two locales and dictionaries shipped by this package. */
+/**
+ * The locales and dictionaries shipped by this package.
+ *
+ * `zh`/`en` are the repo's key-set source of truth and runtime fallback; `pt`
+ * is written in Brazilian Portuguese and may lag them namespace by namespace,
+ * since {@link LocaleRuntime.register} only requires the source pair.
+ */
 const BUILT_IN_LOCALE_METADATA = {
   zh: { label: '中文', fallback: 'en' },
   en: { label: 'English' },
+  pt: { label: 'Português', fallback: 'en' },
 } as const satisfies Record<BuiltInLocaleId, Omit<LocaleDefinition, 'id'>>
 const BUILT_IN_LOCALES: readonly LocaleDefinition[] = Object.freeze(
   LOCALE_IDS.map(id => Object.freeze({ id, ...BUILT_IN_LOCALE_METADATA[id] })),
@@ -139,6 +146,16 @@ function normalizeLanguage(input: LanguageRegistration): Readonly<LanguageRegist
 }
 
 /**
+ * `<html lang>` tag per built-in locale. The locale id is the app's own
+ * vocabulary (primary subtag); the document attribute wants a BCP 47 tag,
+ * which assistive technology and browser features (pronunciation rules,
+ * translation offers, font fallback, spell check) read to pick their own
+ * behavior. `zh` and `pt` alone leave the script/region ambiguous, so the
+ * shipped copy names the variant it actually is.
+ */
+const DOCUMENT_LANGUAGE: Partial<Record<BuiltInLocaleId, string>> = { zh: 'zh-CN', pt: 'pt-BR' }
+
+/**
  * Point `<html lang>` at the active locale, keeping the served document in
  * sync with locale snapshot changes.
  * @param snapshot - current locale state, including the active definition.
@@ -146,7 +163,7 @@ function normalizeLanguage(input: LanguageRegistration): Readonly<LanguageRegist
 function syncDocumentLanguage(snapshot: LocaleSnapshot): void {
   // Non-browser runs (node boots of the client tree) have no document.
   if (typeof document === 'undefined') return
-  document.documentElement.lang = snapshot.active === 'zh' ? 'zh-CN' : snapshot.active
+  document.documentElement.lang = DOCUMENT_LANGUAGE[snapshot.active as BuiltInLocaleId] ?? snapshot.active
 }
 
 /**
@@ -160,7 +177,9 @@ function syncDocumentLanguage(snapshot: LocaleSnapshot): void {
  * `ctx.slots.installLocale`.
  */
 export class LocaleRuntime {
-  private dicts = new Map<string, Map<string, LocaleDict>>()
+  // Stored partial: a locale beyond the source pair may translate only part of
+  // a namespace, and `translate` already falls through to English per key.
+  private dicts = new Map<string, Map<string, Partial<LocaleDict>>>()
   private bound = new Map<string, Translate>()
   private catalog = new Map<string, LocaleDefinition>()
   private fallbackChains = new Map<string, readonly LocaleId[]>()
@@ -358,16 +377,25 @@ export class LocaleRuntime {
   /**
    * Register a declared namespace's dictionaries, all locales in one call —
    * the typed form: each dictionary is checked against the namespace's
-   * {@link LocaleNamespaceMap} key union (a missing or extra key is a
-   * compile error), and every shipped locale is required (bilingual balance
-   * enforced at registration). Duplicate (ns, locale) throws (single occupant; a
-   * namespace's texts have one owner). Registration bumps the revision so
-   * mounted outlets pick up late-arriving dictionaries.
+   * {@link LocaleNamespaceMap} key union (a missing or extra key is a compile
+   * error). Duplicate (ns, locale) throws (single occupant; a namespace's texts
+   * have one owner). Registration bumps the revision so mounted outlets pick up
+   * late-arriving dictionaries.
+   *
+   * The two source locales are required, so the bilingual balance the repo
+   * relies on stays enforced at registration. A locale beyond that pair is
+   * optional and may be partial: {@link translate} resolves each key against
+   * the active locale and then {@link FALLBACK_LOCALE}, so a namespace can gain
+   * a third language one screen at a time instead of in one 1,300-key commit,
+   * and an untranslated key reads in English rather than rendering blank.
    * @param ns - a namespace merged into LocaleNamespaceMap.
-   * @param dicts - complete dictionaries keyed by built-in locale id.
+   * @param dicts - dictionaries keyed by locale id; zh and en complete, the rest optional.
    * @returns disposer removing every locale registered by this call (idempotent).
    */
-  register<N extends Extract<keyof LocaleNamespaceMap, string>>(ns: N, dicts: Record<BuiltInLocaleId, LocaleDictOf<N>>): () => void
+  register<N extends keyof LocaleNamespaceMap & string>(
+    ns: N,
+    dicts: Record<SourceLocaleId, LocaleDictOf<N>> & Partial<Record<LocaleId, Partial<LocaleDictOf<N>>>>,
+  ): () => void
   /**
    * Single-locale untyped form for language-pack contributions and namespaces
    * outside the merge table.
@@ -378,8 +406,12 @@ export class LocaleRuntime {
    * @throws when locale is not a BCP 47-style tag.
    */
   register(ns: string, locale: string, dict: LocaleDict): () => void
-  register(ns: string, localeOrDicts: string | Record<string, LocaleDict>, dict?: LocaleDict): () => void {
-    const pairs: [string, LocaleDict][] = typeof localeOrDicts === 'string'
+  register(
+    ns: string,
+    localeOrDicts: string | Record<string, Partial<LocaleDict>>,
+    dict?: LocaleDict,
+  ): () => void {
+    const pairs: [string, Partial<LocaleDict>][] = typeof localeOrDicts === 'string'
       // Overload guarantees dict on the single-locale arm.
       ? [[localeOrDicts, dict as LocaleDict]]
       : Object.entries(localeOrDicts)
@@ -539,8 +571,8 @@ export const inject = ['slots', 'remote', 'settingsScope']
 export function apply(ctx: ClientContext): void {
   const host = ctx.settingsScope.bind<LocaleSettings>({ namespace: LOCALE_SETTINGS_NAMESPACE })
   const locale = new LocaleRuntime(ctx, host)
-  locale.register(COMMON_NS, { zh, en })
-  locale.register(SETTINGS_NS, { zh: settingsZh, en: settingsEn })
+  locale.register(COMMON_NS, { zh, en, pt })
+  locale.register(SETTINGS_NS, { zh: settingsZh, en: settingsEn, pt: settingsPt })
   ctx.provide('locale', locale)
   // The service IS the LocaleFace (bind + getSnapshot/subscribe): install it
   // so the render machinery can synthesize the `t` standard seat.

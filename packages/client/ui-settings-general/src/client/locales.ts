@@ -34,3 +34,13 @@ export const en = {
   'connection.reconnect': 'Disconnected, reconnect now',
   'connection.restart': 'Connecting, restart now',
 } satisfies Record<SettingsKey, string>
+
+/** Brazilian Portuguese dictionary; partial by design (see the locale package). */
+export const pt = {
+  'trigger': 'Configurações',
+  'title': 'Configurações',
+  'close': 'Fechar',
+  'openDocument': 'Abrir arquivo de configuração',
+  'openDocument.error': 'Não foi possível abrir o arquivo de configuração',
+  'general.nav': 'Geral',
+} satisfies Partial<Record<SettingsKey, string>>

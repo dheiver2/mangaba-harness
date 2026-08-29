@@ -28,3 +28,11 @@ export const en = {
   'fontSize.increase': 'Increase font size',
   'fontSize.decrease': 'Decrease font size',
 } satisfies Record<ThemeKey, string>
+
+/** Brazilian Portuguese dictionary; partial by design (see the locale package). */
+export const pt = {
+  'appearance.title': 'Aparência',
+  'appearance.light': 'Claro',
+  'appearance.dark': 'Escuro',
+  'appearance.system': 'Do sistema',
+} satisfies Partial<Record<ThemeKey, string>>
