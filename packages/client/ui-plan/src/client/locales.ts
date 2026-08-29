@@ -22,3 +22,12 @@ export const en = {
   'chip.off.title': 'Plan mode off — click to turn on (/plan)',
   'chip.exitFailed': 'Failed to exit plan mode',
 } satisfies Record<PlanKey, string>
+
+
+/** Brazilian Portuguese dictionary; partial by design (see the locale package). */
+export const pt = {
+  'chip.on.aria': 'Modo plano ligado, clique para desligar',
+  'chip.on.title': 'Modo plano ligado — clique para desligar (/plan off)',
+  'chip.off.aria': 'Modo plano desligado, clique para ligar',
+  'chip.off.title': 'Modo plano desligado — clique para ligar (/plan)',
+} satisfies Partial<Record<PlanKey, string>>

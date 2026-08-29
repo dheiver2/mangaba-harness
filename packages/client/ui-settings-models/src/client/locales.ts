@@ -208,3 +208,31 @@ export const zh: { [Key in keyof typeof en]: string } = {
   onboardingSaving: '保存中…',
   keyRequired: '请输入 API 密钥后继续。',
 }
+
+/** Brazilian Portuguese dictionary; partial by design (see the locale package). */
+export const pt = {
+  nav: 'Modelos',
+  title: 'Modelos',
+  intro: 'Informe suas chaves de API para usar modelos dos provedores abaixo.',
+  edit: 'Editar',
+  editProvider: 'Editar {provider}',
+  remove: 'Excluir',
+  removeProvider: 'Excluir {provider}',
+  deleteTitle: 'Excluir {provider}?',
+  deleteConfirm: 'Excluir {provider}',
+  deleting: 'Excluindo {provider}…',
+  add: 'Adicionar provedor',
+  provider: 'Provedor',
+  close: 'Fechar',
+  cancel: 'Cancelar',
+  apply: 'Aplicar',
+  applying: 'Aplicando…',
+  savedProvider: '{provider} salvo.',
+  credentialConfigured: 'Chave de API configurada',
+  credentialMissing: 'Chave de API ausente',
+  readOnly: 'O arquivo de configuração é somente leitura nesta instalação.',
+  loadFailed: 'Falha ao carregar a lista de provedores',
+  retry: 'Tentar de novo',
+  keyInput: 'Chave de API',
+  keyPlaceholder: 'Informe sua chave de API',
+} satisfies Partial<Record<ModelsKey, string>>

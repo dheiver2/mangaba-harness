@@ -142,3 +142,22 @@ export const zh: Record<AgentPresetSettingsKey, string> = {
 // Settings plugin list inlines the same fold over this plugin's dictionaries.
 export { presetDisplayText } from '@deepseek-ai/dsh-agent-presets/display'
 export type { PresetDisplaySource, PresetDisplayText } from '@deepseek-ai/dsh-agent-presets/display'
+
+/** Brazilian Portuguese dictionary; partial by design (see the locale package). */
+export const pt = {
+  'title': 'Modo do agente',
+  'description': 'Vale para as sessões que você iniciar a partir de agora. Sessões em andamento mantêm o modo com que começaram.',
+  'loading': 'Carregando modos…',
+  'error': 'Não foi possível carregar os modos de agente.',
+  'userTrust': 'Personalizado',
+  'nav': 'Modos de agente',
+  'builtIn': 'Nativo',
+  'setDefault': 'Definir como padrão',
+  'view': 'Ver',
+  'duplicate': 'Duplicar',
+  'delete': 'Excluir',
+  'presetStandardName': 'Padrão',
+  'presetPtcName': 'Código',
+  'presetMinimalName': 'Mínimo',
+  'presetCordisName': 'Criador',
+} satisfies Partial<Record<AgentPresetSettingsKey, string>>

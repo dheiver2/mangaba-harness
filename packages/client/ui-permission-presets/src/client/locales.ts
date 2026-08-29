@@ -61,3 +61,16 @@ export const accessEn = {
   'confirm.cancel': 'Cancel',
   'confirm.enable': 'Enable Full access',
 } satisfies Record<PermissionAccessKey, string>
+
+
+/** Brazilian Portuguese dictionary; partial by design (see the locale package). */
+export const pt = {
+  'title': 'Permissão',
+  'description': 'Escolha o modo de permissão padrão para novas sessões',
+  'loading': 'Carregando',
+  'unavailable': 'Indisponível',
+  'confirm.title': 'Ativar acesso total?',
+  'confirm.acknowledge': 'Entendo os riscos e quero continuar',
+  'confirm.cancel': 'Cancelar',
+  'confirm.enable': 'Ativar acesso total',
+} satisfies Partial<Record<PermissionSettingsKey, string>>

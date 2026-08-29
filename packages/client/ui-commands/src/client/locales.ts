@@ -26,3 +26,15 @@ export const en = {
   'listbox.aria': '/{command} matches',
   'notice.attachmentsUnsupported': '/{command} does not accept attachments; remove them first',
 } satisfies Record<CommandKey, string>
+
+
+/** Brazilian Portuguese dictionary; partial by design (see the locale package). */
+export const pt = {
+  'search.placeholder': 'Buscar…',
+  'search.aria': 'Filtrar opções',
+  'status.loading': 'Carregando opções…',
+  'status.applying': 'Aplicando…',
+  'status.empty': 'Nenhuma opção',
+  'overlay.aria': 'Opções de /{command}',
+  'listbox.aria': 'Resultados de /{command}',
+} satisfies Partial<Record<CommandKey, string>>
