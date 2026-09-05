@@ -145,9 +145,6 @@ export type { PresetDisplaySource, PresetDisplayText } from '@deepseek-ai/dsh-ag
 
 /** Brazilian Portuguese dictionary; partial by design (see the locale package). */
 export const pt = {
-  'title': 'Modo do agente',
-  'description': 'Vale para as sessões que você iniciar a partir de agora. Sessões em andamento mantêm o modo com que começaram.',
-  'loading': 'Carregando modos…',
   'error': 'Não foi possível carregar os modos de agente.',
   'userTrust': 'Personalizado',
   'nav': 'Modos de agente',

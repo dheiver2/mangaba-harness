@@ -197,7 +197,7 @@ describe('LocaleRuntime', () => {
 
     dispose()
     expect(svc.getLocale().active).toBe('zh')
-    expect(svc.getLocale().locales.map(locale => locale.id)).toEqual(['zh', 'en'])
+    expect(svc.getLocale().locales.map(locale => locale.id)).toEqual(['zh', 'en', 'pt'])
     expect(svc.bind('ns')('hello')).toBe('Hello')
     const revision = svc.getLocale().revision
     dispose()
@@ -273,7 +273,7 @@ describe('LocaleRuntime', () => {
       .toThrow('locale fallback "fr" is not registered')
     expect(() => svc.addLanguage({ id: 'fr', label: 'Français', fallback: 'fr-CA' }))
       .toThrow('fallback cycle')
-    expect(svc.getLocale().locales.map(locale => locale.id)).toEqual(['zh', 'en', 'fr-CA'])
+    expect(svc.getLocale().locales.map(locale => locale.id)).toEqual(['zh', 'en', 'pt', 'fr-CA'])
   })
 
   it('adopts a saved external locale when its definition registers later', () => {
@@ -339,11 +339,11 @@ describe('LocaleRuntime', () => {
   })
 
   it('re-evaluates browser languages as external definitions register and unload', () => {
-    stubLanguages('pt-BR', 'zh-CN')
+    stubLanguages('it-IT', 'zh-CN')
     const { svc } = make()
     expect(svc.getLocale().active).toBe('zh')
-    const dispose = svc.addLanguage({ id: 'pt-BR', label: 'Português (Brasil)', fallback: 'en' })
-    expect(svc.getLocale().active).toBe('pt-BR')
+    const dispose = svc.addLanguage({ id: 'it-IT', label: 'Italiano', fallback: 'en' })
+    expect(svc.getLocale().active).toBe('it-IT')
     dispose()
     expect(svc.getLocale().active).toBe('zh')
   })

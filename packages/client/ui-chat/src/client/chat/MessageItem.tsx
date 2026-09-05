@@ -159,7 +159,9 @@ function TurnErrorItem({ node, t }: {
       <div className={css.turnErrorCopy}>
         <span className={css.turnErrorTitle}>{t('message.turnError')}</span>
         <span className={css.turnErrorMessage} title={explained ? node.message : undefined}>
-          {explained ? t(`error.${node.code as string}` as Parameters<typeof t>[0]) : node.message}
+          {explained
+            ? t(`error.${node.code as string}` as Parameters<typeof t>[0])
+            : failureMessage(node.message, node.code, t)}
         </span>
       </div>
       {node.code !== undefined && <code className={css.turnErrorCode}>{node.code}</code>}

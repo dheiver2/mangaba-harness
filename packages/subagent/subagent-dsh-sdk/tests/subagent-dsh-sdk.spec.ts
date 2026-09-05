@@ -16,14 +16,14 @@ import SubagentRuntime from '@deepseek-ai/dsh-subagent'
 import SessionProjectionRegistry from '@deepseek-ai/dsh-session-projection'
 import type { Agent, AgentOptions } from '@deepseek-ai/dsh-agent'
 import {
-  DeepSeekHarness,
+  MangabaHarness,
   HarnessClient,
   HarnessSession,
   SdkProtocolError,
 } from '@deepseek-ai/dsh-sdk-client'
-import { createProcessDeepSeekHarness } from '../../../sdk/client/src/api.ts'
+import { createProcessMangabaHarness } from '../../../sdk/client/src/api.ts'
 import type { RuntimeProcessOptions } from '../../../sdk/client/src/launch.ts'
-import type { DeepSeekHarnessOptions } from '@deepseek-ai/dsh-sdk-client'
+import type { MangabaHarnessOptions } from '@deepseek-ai/dsh-sdk-client'
 import { ReasoningEffortId } from '@deepseek-ai/dsh-llm'
 import * as sdk from '../src/index.ts'
 import {
@@ -42,7 +42,7 @@ const existingPatch = fileURLToPath(new URL(
   import.meta.url,
 ))
 const defaultCreateHarness = runInternals.createHarness.bind(runInternals)
-let createdHarnessOptions: DeepSeekHarnessOptions[] = []
+let createdHarnessOptions: MangabaHarnessOptions[] = []
 
 beforeEach(() => {
   createdHarnessOptions = []
@@ -60,7 +60,7 @@ beforeEach(() => {
       ...options.disposeEofGraceMs === undefined ? {} : { disposeEofGraceMs: options.disposeEofGraceMs },
       ...options.disposeGraceMs === undefined ? {} : { disposeGraceMs: options.disposeGraceMs },
     }
-    return createProcessDeepSeekHarness(runtime, options)
+    return createProcessMangabaHarness(runtime, options)
   }
 })
 
@@ -155,7 +155,7 @@ describe('sdkChildOutcome', () => {
 describe('dsh-subagent-dsh-sdk provider', () => {
   it('constructs the production dsh-backed harness lazily', async () => {
     const harness = defaultCreateHarness({})
-    expect(harness).toBeInstanceOf((await import('@deepseek-ai/dsh-sdk-client')).DeepSeekHarness)
+    expect(harness).toBeInstanceOf((await import('@deepseek-ai/dsh-sdk-client')).MangabaHarness)
     await harness.close()
   })
 
@@ -413,7 +413,7 @@ describe('dsh-subagent-dsh-sdk provider', () => {
 
   it('reports only safe shutdown facts when cancelled startup rollback fails', async () => {
     const rawCleanup = 'cancelled shutdown leaked SECRET_TOKEN'
-    const spy = vi.spyOn(DeepSeekHarness.prototype, 'close').mockImplementation(async function (this: DeepSeekHarness) {
+    const spy = vi.spyOn(MangabaHarness.prototype, 'close').mockImplementation(async function (this: MangabaHarness) {
       spy.mockRestore()
       await this.close()
       throw new Error(rawCleanup)
@@ -447,8 +447,8 @@ describe('dsh-subagent-dsh-sdk provider', () => {
 
   it('keeps an initialize failure authoritative when a later abort flag is already set', async () => {
     const rawFailure = new SdkProtocolError('scripted initialize rejection')
-    const start = vi.spyOn(DeepSeekHarness.prototype, 'start').mockRejectedValue(rawFailure)
-    const close = vi.spyOn(DeepSeekHarness.prototype, 'close').mockResolvedValue()
+    const start = vi.spyOn(MangabaHarness.prototype, 'start').mockRejectedValue(rawFailure)
+    const close = vi.spyOn(MangabaHarness.prototype, 'close').mockResolvedValue()
     try {
       const controller = new AbortController()
       const pending = startSdkRun(request('p', controller.signal), {
@@ -779,7 +779,7 @@ describe('dsh-subagent-dsh-sdk provider', () => {
     const ctx = await setup()
     const run = await ctx.subagents.start('dsh-sdk', request())
     await run.result
-    const spy = vi.spyOn(DeepSeekHarness.prototype, 'close').mockImplementation(async function (this: DeepSeekHarness) {
+    const spy = vi.spyOn(MangabaHarness.prototype, 'close').mockImplementation(async function (this: MangabaHarness) {
       spy.mockRestore()
       await this.close()
       throw new Error(rawCleanup)

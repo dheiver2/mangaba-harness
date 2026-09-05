@@ -394,7 +394,7 @@ export class LocaleRuntime {
    */
   register<N extends keyof LocaleNamespaceMap & string>(
     ns: N,
-    dicts: Record<SourceLocaleId, LocaleDictOf<N>> & Partial<Record<LocaleId, Partial<LocaleDictOf<N>>>>,
+    dicts: Record<SourceLocaleId, LocaleDictOf<N>> & Record<LocaleId, Partial<LocaleDictOf<N>>>,
   ): () => void
   /**
    * Single-locale untyped form for language-pack contributions and namespaces

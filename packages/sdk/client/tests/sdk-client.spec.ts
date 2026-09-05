@@ -21,7 +21,7 @@ import {
   TransportClosedError,
   type HarnessNotification,
 } from '../src/index.ts'
-import { createProcessDeepSeekHarness, finalResponse, normalizeInput } from '../src/api.ts'
+import { createProcessMangabaHarness, finalResponse, normalizeInput } from '../src/api.ts'
 import { createProcessHarnessClient } from '../src/client.ts'
 import type { RuntimeProcessOptions } from '../src/launch.ts'
 
@@ -50,8 +50,8 @@ function processClient(options: RuntimeProcessOptions): HarnessClient {
   return createProcessHarnessClient(options)
 }
 
-function harnessWith(env: Record<string, string> = {}, extra: LaunchOverrides = {}): DeepSeekHarness {
-  const harness = createProcessDeepSeekHarness(fakeLaunch(env, extra))
+function harnessWith(env: Record<string, string> = {}, extra: LaunchOverrides = {}): MangabaHarness {
+  const harness = createProcessMangabaHarness(fakeLaunch(env, extra))
   cleanups.push(() => harness.close())
   return harness
 }
@@ -170,7 +170,7 @@ describe('MangabaHarness', () => {
   it('sends the configured cwd/provider/model/reasoningEffort/maxTokens in the handshake exactly once', async () => {
     const dir = await tempDir('sdk-client-init-')
     const recordFile = join(dir, 'init.jsonl')
-    const harness = createProcessDeepSeekHarness(fakeLaunch({ FAKE_RECORD_INIT: recordFile }), {
+    const harness = createProcessMangabaHarness(fakeLaunch({ FAKE_RECORD_INIT: recordFile }), {
       cwd: dir,
       provider: 'custom-provider',
       model: 'custom-model',
@@ -201,7 +201,7 @@ describe('MangabaHarness', () => {
     await mkdir(inner)
     const relativeCwd = relative(process.cwd(), inner)
     expect(isAbsolute(relativeCwd)).toBe(false)
-    const harness = createProcessDeepSeekHarness(
+    const harness = createProcessMangabaHarness(
       fakeLaunch({ FAKE_RECORD_INIT: recordFile, FAKE_ECHO_CWD_IN_INIT: '1' }, { cwd: relativeCwd }),
     )
     cleanups.push(() => harness.close())
@@ -236,7 +236,7 @@ describe('MangabaHarness', () => {
     const initialize = vi.spyOn(HarnessClient.prototype, 'initialize').mockRejectedValue(initializeError)
     const close = vi.spyOn(HarnessClient.prototype, 'close').mockRejectedValue(cleanupError)
     try {
-      const harness = createProcessDeepSeekHarness(fakeLaunch())
+      const harness = createProcessMangabaHarness(fakeLaunch())
       const failedClient = harness.client
       const failure = await harness.start().catch((error: unknown) => error)
       expect(failure).toBeInstanceOf(AggregateError)
@@ -257,7 +257,7 @@ describe('MangabaHarness', () => {
     const initialize = vi.spyOn(HarnessClient.prototype, 'initialize').mockReturnValue(initializeResult)
     const close = vi.spyOn(HarnessClient.prototype, 'close').mockResolvedValue()
     try {
-      const harness = createProcessDeepSeekHarness(fakeLaunch())
+      const harness = createProcessMangabaHarness(fakeLaunch())
       const original = harness.client
       const pending = harness.start()
       await harness.close()
@@ -295,7 +295,7 @@ describe('MangabaHarness', () => {
   it('supports await using disposal', async () => {
     let captured: MangabaHarness
     {
-      await using harness = createProcessDeepSeekHarness(fakeLaunch())
+      await using harness = createProcessMangabaHarness(fakeLaunch())
       captured = harness
       const result = await harness.run('scoped')
       expect(result.finalResponse).toBe('hello from fake runtime')
@@ -305,7 +305,7 @@ describe('MangabaHarness', () => {
   })
 
   it('constructs the public dsh-backed client lazily', async () => {
-    const harness = new DeepSeekHarness()
+    const harness = new MangabaHarness()
     expect(harness.client).toBeInstanceOf(HarnessClient)
     await harness.close()
   })

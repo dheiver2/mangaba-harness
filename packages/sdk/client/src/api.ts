@@ -11,7 +11,7 @@ import { resolve } from 'node:path'
 import type { SessionEvent, TurnEndReason } from '@deepseek-ai/dsh-session'
 import { createProcessHarnessClient, HarnessClient, isRecord, SdkProtocolError } from './client.ts'
 import type { RuntimeProcessOptions } from './launch.ts'
-import type { ContentBlock, DeepSeekHarnessOptions, HarnessNotification, RunResult, SdkPromptContentBlock } from './types.ts'
+import type { ContentBlock, MangabaHarnessOptions, HarnessNotification, RunResult, SdkPromptContentBlock } from './types.ts'
 
 /**
  * Reusable SDK for running Mangaba Harness agent turns in a runtime
@@ -25,14 +25,14 @@ export class MangabaHarness implements AsyncDisposable {
   private readonly cwd: string
   private readonly provider: string
   private readonly model: string
-  private readonly reasoningEffort: DeepSeekHarnessOptions['reasoningEffort']
+  private readonly reasoningEffort: MangabaHarnessOptions['reasoningEffort']
   private readonly maxTokens: number | undefined
   private initialized: Promise<void> | undefined
   private closed = false
 
   /** @param options - dsh launch configuration plus the session route, effort, and output cap. */
-  constructor(options?: DeepSeekHarnessOptions)
-  constructor(options: DeepSeekHarnessOptions = {}, clientFactory?: () => HarnessClient) {
+  constructor(options?: MangabaHarnessOptions)
+  constructor(options: MangabaHarnessOptions = {}, clientFactory?: () => HarnessClient) {
     this.createClient = clientFactory ?? (() => new HarnessClient(options))
     this.clientInstance = this.createClient()
     // Absolute before the handshake: the child spawns relative to THIS
@@ -134,14 +134,14 @@ export class MangabaHarness implements AsyncDisposable {
 }
 
 /** Construct the high-level API against a generic process for package-local fake-runtime tests. */
-export function createProcessDeepSeekHarness(
+export function createProcessMangabaHarness(
   runtime: RuntimeProcessOptions,
-  options: DeepSeekHarnessOptions = {},
-): DeepSeekHarness {
-  const Constructor = DeepSeekHarness as unknown as new (
-    publicOptions: DeepSeekHarnessOptions,
+  options: MangabaHarnessOptions = {},
+): MangabaHarness {
+  const Constructor = MangabaHarness as unknown as new (
+    publicOptions: MangabaHarnessOptions,
     clientFactory: () => HarnessClient,
-  ) => DeepSeekHarness
+  ) => MangabaHarness
   return new Constructor({
     ...runtime.cwd === undefined ? {} : { processCwd: runtime.cwd },
     ...options,

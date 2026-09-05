@@ -28,9 +28,9 @@ describe('DocumentTitle', () => {
   it('uses the generic title when the build provides no title', () => {
     vi.stubEnv('DSH_CLIENT_TITLE', '')
     delete process.env.DSH_CLIENT_TITLE
-    const mounted = render(<DocumentTitle title="First title" productTitle="DSH Local Build" />)
-    expect(document.title).toBe('First title — DSH Local Build')
+    const mounted = render(<DocumentTitle title="First title" productTitle="Mangaba Local Build" />)
+    expect(document.title).toBe('First title — Mangaba Local Build')
     mounted.unmount()
-    expect(document.title).toBe('Mangaba Harness')
+    expect(document.title).toBe('Mangaba Local Build')
   })
 })

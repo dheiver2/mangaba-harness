@@ -138,11 +138,12 @@ describe('locale apply', () => {
     expect(instance.getSnapshot().options).toEqual([
       { id: 'zh', label: '中文' },
       { id: 'en', label: 'English' },
+      { id: 'pt', label: 'Português' },
       { id: 'ja', label: '日本語' },
     ])
 
     await languagePack.dispose()
-    expect(instance.getSnapshot().options.map(option => option.id)).toEqual(['zh', 'en'])
+    expect(instance.getSnapshot().options.map(option => option.id)).toEqual(['zh', 'en', 'pt'])
   })
 
   it('loads and refreshes the explicit Host preference after nonblocking activation', async () => {
