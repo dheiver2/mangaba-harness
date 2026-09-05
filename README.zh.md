@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="apps/web/public/favicon.svg" alt="Mangaba" width="96" height="96">
-</p>
-
 # Mangaba Harness
 
 [English](README.md) | 中文
@@ -116,7 +112,7 @@ printf 'FROM qwen3:4b\nPARAMETER num_ctx 32768\n' | ollama create qwen3-4b-32k -
 
 ## 贡献
 
-见 [CONTRIBUTING.md](CONTRIBUTING.md)。
+见 [CONTRIBUTING.zh.md](CONTRIBUTING.zh.md)。
 
 ## 品牌
 

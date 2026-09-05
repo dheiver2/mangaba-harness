@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="apps/web/public/favicon.svg" alt="Mangaba" width="96" height="96">
-</p>
-
 # Mangaba Harness
 
 English | [中文](README.zh.md)
